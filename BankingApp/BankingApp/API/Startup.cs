@@ -70,15 +70,6 @@ namespace API
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
-            app.UseStatusCodePages(async context =>
-            {
-                var response = context.HttpContext.Response;
-                if (response.StatusCode == StatusCodes.Status401Unauthorized ||
-                    response.StatusCode == StatusCodes.Status403Forbidden)
-                {
-                    response.Redirect("authorize");
-                }
-            });
             app.UseMvc();
         }
     }
