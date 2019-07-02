@@ -1,5 +1,18 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using AutoMapper;
+using Data;
+using Data.Entities;
+using Data.Repositories.Interfaces;
+using Data.UnitOfWork;
 using DTO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.IdentityModel.Tokens;
+using Services.Helpers;
 using Services.Interfaces;
 
 namespace Services
@@ -7,9 +20,85 @@ namespace Services
     public class AuthenticateService : IAuthenticateService
     {
         private readonly IMapper _mapper;
-        public bool Login(LoginDTO identity)
+        private readonly DataContext _context;
+        public AuthenticateService(IMapper mapper, DataContext context)
         {
+            _mapper = mapper;
+            _context = context;
+        }
+
+        public string GetIdentityToken(LoginDTO identity)
+        {
+            if (identity == null)
+            {
+                return null;
+            }
             
+            var claimsIdentity = GetClaimsIdentity(identity.Login, identity.Password);
+            if (claimsIdentity == null)
+            {
+                return null;
+            }
+
+            var now = DateTime.UtcNow;
+
+
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.Issuer,
+                audience: AuthOptions.Audience,
+                notBefore: now,
+                claims: claimsIdentity.Claims,
+                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.Lifetime)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+            return encodedJwt;
+
+        }
+
+        public User GetUserIdentity(string login, string password)
+        {
+            using (var uof = new UnitOfWork())
+            {
+                return uof.UserRepository
+                    .Find(u => u.Login == login
+                               &&
+                               u.Password == password)
+                    .FirstOrDefault();
+            }
+        }
+
+        public User GetUserByLogin(string login)
+        {
+            using (var uof = new UnitOfWork())
+            {
+                return uof.UserRepository.GetByLogin(login);
+            }
+        }
+
+        private ClaimsIdentity GetClaimsIdentity(string login, string password)
+        {
+            using (var uof = new UnitOfWork())
+            {
+                var user = uof.UserRepository
+                    .Find(u => u.Login == login && u.Password == password)
+                    .SingleOrDefault();
+                if (user == null)
+                {
+                    return null;
+                }
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
+                };
+                ClaimsIdentity claimsIdentity =
+                    new ClaimsIdentity(
+                        claims,
+                        "Token",
+                        ClaimsIdentity.DefaultNameClaimType,
+                        ClaimsIdentity.DefaultRoleClaimType);
+                return claimsIdentity;
+            }
         }
     }
 }

@@ -3,19 +3,16 @@ using System.Threading.Tasks;
 using Data.Repositories;
 using Data.Repositories.Interfaces;
 using Data.UnitOfWork.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.UnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
-        private readonly DataContext _context;
+        private readonly DataContext _context = new DataContext();
         private IUserRepository _userRepository;
         private ITransactionRepository _transactionRepository;
 
-        public UnitOfWork(DataContext context)
-        {
-            _context = context;
-        }
 
         public IUserRepository UserRepository
         {

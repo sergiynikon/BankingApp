@@ -7,7 +7,7 @@ namespace Data.Repositories
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(DbContext context, DbSet<User> entity) : base(context, entity)
+        public UserRepository(DbContext context) : base(context)
         {
         }
 
