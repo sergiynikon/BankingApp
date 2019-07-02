@@ -53,6 +53,8 @@ namespace API
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
                     };
                 });
+            services.AddSingleton(MappingConfigHelper.GetMapper());
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
