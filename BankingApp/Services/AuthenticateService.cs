@@ -17,12 +17,10 @@ namespace Services
     public class AuthenticateService : IAuthenticateService
     {
         private readonly IMapper _mapper;
-        private readonly DataContext _context;
         private readonly IUnitOfWork _unitOfWork;
         public AuthenticateService(IMapper mapper, DataContext context, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
-            _context = context;
             _unitOfWork = unitOfWork;
         }
 
@@ -67,7 +65,18 @@ namespace Services
         public User GetUserByLogin(string login)
         {
             return _unitOfWork.UserRepository.GetByLogin(login);
+        }
 
+        public void RegisterUser(RegisterDTO identity)
+        {
+            var user = _mapper.Map<User>(identity);
+            _unitOfWork.UserRepository.Add(user);
+            _unitOfWork.Save();
+        }
+
+        public User GetUserByEmail(string email)
+        {
+            return _unitOfWork.UserRepository.Find(u => u.Email == email).SingleOrDefault();
         }
 
         private ClaimsIdentity GetClaimsIdentity(string login, string password)

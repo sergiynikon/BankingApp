@@ -9,6 +9,7 @@ namespace Services.Helpers.MapperProfiles
         public UserProfile()
         {
             CreateMap<LoginDTO, User>();
+            CreateMap<RegisterDTO, User>();
         }
     }
 }

@@ -13,5 +13,7 @@ namespace Services.Interfaces
         string GetIdentityToken(LoginDTO identity);
         User GetUserIdentity(string login, string password);
         User GetUserByLogin(string login);
+        void RegisterUser(RegisterDTO identity);
+        User GetUserByEmail(string email);
     }
 }

@@ -7,6 +7,18 @@ namespace Data.Entities
 {
     public class User
     {
+        public User()
+        {
+        }
+
+        public User(string login, string email, string password)
+        {
+            Id = new Guid();
+            Login = login;
+            Email = email;
+            Password = password;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
@@ -17,9 +29,9 @@ namespace Data.Entities
 
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
 
         public double Balance { get; set; } = 0;
 
