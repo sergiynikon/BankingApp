@@ -6,7 +6,7 @@ namespace Data.Repositories
 {
     public class TransactionRepository : Repository<Transaction>, ITransactionRepository
     {
-        public TransactionRepository(DbContext context, DbSet<Transaction> entity) : base(context, entity)
+        public TransactionRepository(DbContext context) : base(context)
         {
         }
     }

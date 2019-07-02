@@ -13,7 +13,7 @@ namespace Data.Repositories
         private readonly DbContext _context;
         protected readonly DbSet<TEntity> Entity;
 
-        public Repository(DbContext context, DbSet<TEntity> entity)
+        public Repository(DbContext context)
         {
             _context = context;
             Entity = context.Set<TEntity>();
