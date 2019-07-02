@@ -37,11 +37,11 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            //services.AddDbContext<DataContext>(options =>
-            //{
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            //});
-            services.AddDbContext<DataContext>();
+            services.AddDbContext<DataContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            //services.AddDbContext<DataContext>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -59,7 +59,7 @@ namespace API
                     };
                 });
             services.AddSingleton(MappingConfigHelper.GetMapper());
-            services.AddSingleton<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IAuthenticateService, AuthenticateService>();
 

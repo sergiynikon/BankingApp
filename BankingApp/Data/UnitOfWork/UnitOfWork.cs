@@ -9,9 +9,14 @@ namespace Data.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DataContext _context = new DataContext();
+        private readonly DataContext _context;
         private IUserRepository _userRepository;
         private ITransactionRepository _transactionRepository;
+
+        public UnitOfWork(DataContext context)
+        {
+            _context = context;
+        }
 
 
         public IUserRepository UserRepository
@@ -33,11 +38,6 @@ namespace Data.UnitOfWork
         public int Save()
         {
             return _context.SaveChanges();
-        }
-
-        public void Dispose()
-        {
-            _context?.Dispose();
         }
     }
 }

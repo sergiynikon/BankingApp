@@ -3,7 +3,7 @@ using Data.Repositories.Interfaces;
 
 namespace Data.UnitOfWork.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
         IUserRepository UserRepository { get; }
         ITransactionRepository TransactionRepository { get; }

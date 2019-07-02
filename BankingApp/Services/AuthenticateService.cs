@@ -6,11 +6,8 @@ using System.Security.Claims;
 using AutoMapper;
 using Data;
 using Data.Entities;
-using Data.Repositories.Interfaces;
-using Data.UnitOfWork;
+using Data.UnitOfWork.Interfaces;
 using DTO;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Services.Helpers;
 using Services.Interfaces;
@@ -21,10 +18,12 @@ namespace Services
     {
         private readonly IMapper _mapper;
         private readonly DataContext _context;
-        public AuthenticateService(IMapper mapper, DataContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        public AuthenticateService(IMapper mapper, DataContext context, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public string GetIdentityToken(LoginDTO identity)
@@ -57,48 +56,41 @@ namespace Services
 
         public User GetUserIdentity(string login, string password)
         {
-            using (var uof = new UnitOfWork())
-            {
-                return uof.UserRepository
-                    .Find(u => u.Login == login
-                               &&
-                               u.Password == password)
-                    .FirstOrDefault();
-            }
+            return _unitOfWork.UserRepository
+                .Find(u => u.Login == login
+                           &&
+                           u.Password == password)
+                .FirstOrDefault();
+        
         }
 
         public User GetUserByLogin(string login)
         {
-            using (var uof = new UnitOfWork())
-            {
-                return uof.UserRepository.GetByLogin(login);
-            }
+            return _unitOfWork.UserRepository.GetByLogin(login);
+
         }
 
         private ClaimsIdentity GetClaimsIdentity(string login, string password)
         {
-            using (var uof = new UnitOfWork())
+            var user = _unitOfWork.UserRepository
+                .Find(u => u.Login == login && u.Password == password)
+                .SingleOrDefault();
+            if (user == null)
             {
-                var user = uof.UserRepository
-                    .Find(u => u.Login == login && u.Password == password)
-                    .SingleOrDefault();
-                if (user == null)
-                {
-                    return null;
-                }
-
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
-                };
-                ClaimsIdentity claimsIdentity =
-                    new ClaimsIdentity(
-                        claims,
-                        "Token",
-                        ClaimsIdentity.DefaultNameClaimType,
-                        ClaimsIdentity.DefaultRoleClaimType);
-                return claimsIdentity;
+                return null;
             }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
+            };
+            ClaimsIdentity claimsIdentity =
+                new ClaimsIdentity(
+                    claims,
+                    "Token",
+                    ClaimsIdentity.DefaultNameClaimType,
+                    ClaimsIdentity.DefaultRoleClaimType);
+            return claimsIdentity;
         }
     }
 }
