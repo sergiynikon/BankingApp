@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace BankingApp.API.Controllers
 {
+    /// <summary>
+    /// this class created only for check whether authorization works correctly
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]

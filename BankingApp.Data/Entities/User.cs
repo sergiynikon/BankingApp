@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BankingApp.Data.Helpers;
+
 
 namespace BankingApp.Data.Entities
 {
@@ -9,10 +11,11 @@ namespace BankingApp.Data.Entities
     {
         public User(string login, string email, string password)
         {
-            Id = new Guid();
+            Id = new Guid(); //TODO: check whether it works without creating new Guid()
             Login = login;
             Email = email;
             Password = password;
+            Balance = 0;
         }
 
         [Key]
@@ -24,14 +27,14 @@ namespace BankingApp.Data.Entities
         public string Login { get; set; }
 
         [Required]
-        [DataType(DataType.EmailAddress)]
+        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
         public string Email { get; set; }
 
         [Required]
-        [DataType(DataType.Password)]
+        [Range(Constants.MinPasswordLength, Constants.MaxPasswordLength)]
         public string Password { get; set; }
 
-        public double Balance { get; set; } = 0;
+        public double Balance { get; set; }
 
         [InverseProperty("SenderUser")]
         public virtual ICollection<Transaction> SentTransactions { get; set; } = new List<Transaction>();
