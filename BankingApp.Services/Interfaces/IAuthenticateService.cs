@@ -8,11 +8,11 @@ namespace BankingApp.Services.Interfaces
 {
     public interface IAuthenticateService
     {
-        string GetIdentityToken(LoginDTO identity);
+        string GetIdentityToken(LoginDto identity);
         User GetUserIdentity(string login, string password);
-        User GetUserByLogin(string login);
-        void RegisterUser(RegisterDTO identity);
-        User GetUserByEmail(string email);
+        AuthenticationDetailsDto RegisterUser(RegisterDto identity);
         Guid GetUserId(IEnumerable<Claim> claims);
+        bool UserLoginExists(string login);
+        bool UserEmailExists(string email);
     }
 }

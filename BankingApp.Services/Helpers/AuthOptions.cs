@@ -1,18 +1,30 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Text;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BankingApp.Services.Helpers
 {
-    public class AuthOptions
+    public static class AuthOptions
     {
-        //TODO: move all configurations to appsettings.json and add it using configuration
+        private static IConfiguration ConstantsConfig { get; } = SetConfiguration()
+            .GetSection("Constants")
+            .GetSection("ForAuthOptions");
+        private static IConfiguration SetConfiguration()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
 
-        public const string Issuer = "BankingApp";
-        public const string Audience = "https://localhost:4000";
+            return builder.Build();
+        }
 
-        private const string Key = "ethuasb-ythu2-3uhs4ithukl3sth2--elk";
+        private static readonly string Key = ConstantsConfig["Key"];
 
-        public const int Lifetime = 1;
+        public static string Issuer = ConstantsConfig["Issuer"];
+        public static string Audience = ConstantsConfig["Audience"];
+
+        public static int Lifetime = int.Parse(ConstantsConfig["LifeTime"]);
 
         public static SymmetricSecurityKey GetSymmetricSecurityKey()
         {

@@ -17,72 +17,48 @@ namespace BankingApp.API.Controllers
             _authenticateService = authenticateService;
         }
 
-
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginDTO identity)
+        [HttpPost]
+        [Route("login")]
+        public IActionResult Login([FromBody] LoginDto identity)
         {
-            if (identity == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
-
-            if (_authenticateService.GetUserByLogin(identity.Login) == null)
-            {
-                return BadRequest(new { message = "Incorrect login!" });
-            }
-
 
             var userIdentity = _authenticateService.GetUserIdentity(identity.Login, identity.Password);
 
             if (userIdentity == null)
             {
-                return BadRequest(new { message = "Incorrect password!" });
+                return BadRequest(AuthenticationDetailsDto.Error("Incorrect login or password!"));
             }
 
             var token = _authenticateService.GetIdentityToken(identity);
             if (token == null)
             {
-                return BadRequest(new { message = "Can not authorize, please try again later!" });
+                return BadRequest(AuthenticationDetailsDto.Error());
             }
 
             return Ok(token);
         }
 
-        [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterDTO identity)
+        [HttpPost]
+        [Route("register")]
+        public IActionResult Register([FromBody] RegisterDto identity)
         {
-            if (identity == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
-            var userByLogin = _authenticateService.GetUserByLogin(identity.Login);
-            if (userByLogin != null)
+            var result = _authenticateService.RegisterUser(identity);
+
+            if (!result.IsSuccess)
             {
-                return BadRequest(new {message = $"User with login '{identity.Login}' already exists!"});
+                return BadRequest(result);
             }
 
-            var userByEmail = _authenticateService.GetUserByEmail(identity.Email);
-            if (userByEmail != null)
-            {
-                return BadRequest(new {message = $"User with email '{identity.Email}' already exists!"});
-            }
-
-            //TODO: move magic number '5' to separate settings file
-            int minPasswordLength = 5;
-            if (identity.Password.Length < minPasswordLength)
-            {
-                return BadRequest(new {message = $"Password length must be at least {minPasswordLength}"});
-            }
-
-            if (identity.Password != identity.ConfirmPassword)
-            {
-                return BadRequest(new {message = $"Password do not match, please confirm password!"});
-            }
-
-            _authenticateService.RegisterUser(identity);
-
-            return Ok();
+            return Ok(result);
         }
     }
 }

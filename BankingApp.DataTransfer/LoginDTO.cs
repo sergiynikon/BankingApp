@@ -1,8 +1,13 @@
-﻿namespace BankingApp.DataTransfer
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BankingApp.DataTransfer
 {
-    public class LoginDTO
+    public class LoginDto
     {
+        [Required]
         public string Login { get; set; }
+
+        [Required]
         public string Password { get; set; }
     }
 }

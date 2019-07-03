@@ -7,10 +7,6 @@ namespace BankingApp.Data.Entities
 {
     public class User
     {
-        public User()
-        {
-        }
-
         public User(string login, string email, string password)
         {
             Id = new Guid();
@@ -42,6 +38,5 @@ namespace BankingApp.Data.Entities
 
         [InverseProperty("ReceiverUser")]
         public virtual ICollection<Transaction> ReceivedTransactions { get; set; } = new List<Transaction>();
-
     }
 }

@@ -6,5 +6,7 @@ namespace BankingApp.Data.Repositories.Interfaces
     {
         User GetByLogin(string login);
 
+        bool UserLoginExists(string login);
+        bool UserEmailExists(string email);
     }
 }

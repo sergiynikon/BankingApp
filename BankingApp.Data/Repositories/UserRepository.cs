@@ -15,5 +15,15 @@ namespace BankingApp.Data.Repositories
         {
             return Entity.FirstOrDefault(u => u.Login == login);
         }
+
+        public bool UserLoginExists(string login)
+        {
+            return Entity.Any(u => u.Login == login);
+        }
+
+        public bool UserEmailExists(string email)
+        {
+            return Entity.Any(u => u.Email == email);
+        }
     }
 }

@@ -49,7 +49,6 @@ namespace BankingApp.API
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
                     };
                 });
-            services.AddSingleton(MappingConfigHelper.GetMapper());
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IAuthenticateService, AuthenticateService>();

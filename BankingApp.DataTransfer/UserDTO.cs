@@ -2,7 +2,7 @@
 
 namespace BankingApp.DataTransfer
 {
-    public class UserDTO
+    public class UserDto
     {
         public Guid Id { get; set; }
         public string Login { get; set; }

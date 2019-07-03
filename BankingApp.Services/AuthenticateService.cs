@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using AutoMapper;
 using BankingApp.Data;
 using BankingApp.Data.Entities;
 using BankingApp.Data.UnitOfWork.Interfaces;
@@ -16,15 +15,13 @@ namespace BankingApp.Services
 {
     public class AuthenticateService : IAuthenticateService
     {
-        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public AuthenticateService(IMapper mapper, DataContext context, IUnitOfWork unitOfWork)
+        public AuthenticateService(DataContext context, IUnitOfWork unitOfWork)
         {
-            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
-        public string GetIdentityToken(LoginDTO identity)
+        public string GetIdentityToken(LoginDto identity)
         {
             if (identity == null)
             {
@@ -54,33 +51,40 @@ namespace BankingApp.Services
 
         public User GetUserIdentity(string login, string password)
         {
-            return _unitOfWork.UserRepository
-                .Find(u => u.Login == login
-                           &&
-                           u.Password == password)
-                .FirstOrDefault();
+            return _unitOfWork.UserRepository.Find(u => u.Login == login && u.Password == password).SingleOrDefault();
         }
 
-        public User GetUserByLogin(string login)
+        public AuthenticationDetailsDto RegisterUser(RegisterDto identity)
         {
-            return _unitOfWork.UserRepository.GetByLogin(login);
-        }
+            if (_unitOfWork.UserRepository.UserLoginExists(identity.Login))
+            {
+                return AuthenticationDetailsDto.Error($"login {identity.Login} already exists!");
+            }
 
-        public void RegisterUser(RegisterDTO identity)
-        {
-            var user = _mapper.Map<User>(identity);
+            if (_unitOfWork.UserRepository.UserEmailExists(identity.Email))
+            {
+                return AuthenticationDetailsDto.Error($"email {identity.Email} already taken!");
+            }
+
+            var user = identity.ConvertToUser();
             _unitOfWork.UserRepository.Add(user);
             _unitOfWork.Save();
-        }
-
-        public User GetUserByEmail(string email)
-        {
-            return _unitOfWork.UserRepository.Find(u => u.Email == email).SingleOrDefault();
+            return AuthenticationDetailsDto.Success();
         }
 
         public Guid GetUserId(IEnumerable<Claim> claims)
         {
             return Guid.Parse(claims.First(c => c.Type == "Id").Value);
+        }
+
+        public bool UserLoginExists(string login)
+        {
+            return _unitOfWork.UserRepository.UserLoginExists(login);
+        }
+
+        public bool UserEmailExists(string email)
+        {
+            return _unitOfWork.UserRepository.UserEmailExists(email);
         }
 
         private ClaimsIdentity GetClaimsIdentity(string login, string password)

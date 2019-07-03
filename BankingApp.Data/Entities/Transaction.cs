@@ -23,8 +23,7 @@ namespace BankingApp.Data.Entities
         public virtual User SenderUser { get; set; }
         public Guid? SenderUserId { get; set; }
 
-
-
-
+        //TODO: add property of transaction type
+        //TODO: make several constructors
     }
 }

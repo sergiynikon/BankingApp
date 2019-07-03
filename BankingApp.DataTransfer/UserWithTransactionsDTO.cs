@@ -3,7 +3,7 @@ using BankingApp.Data.Entities;
 
 namespace BankingApp.DataTransfer
 {
-    public class UserWithTransactionsDTO
+    public class UserWithTransactionsDto
     {
         public string Login { get; set; }
         public IEnumerable<Transaction> SentTransactions { get; set; }
