@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using BankingApp.Data.Entities;
 using BankingApp.Data.UnitOfWork.Interfaces;
+using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
 
 namespace BankingApp.Services.Implementation
@@ -15,14 +15,26 @@ namespace BankingApp.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Transaction> GetSentTransactions(Guid userId)
+        public IEnumerable<TransactionViewDto> GetSentTransactions(Guid userId)
         {
-            return _unitOfWork.TransactionRepository.GetSentTransactionsByUserId(userId);
+            var transactions = new List<TransactionViewDto>();
+            var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetSentTransactionsByUserId(userId);
+            foreach (var transaction in transactionsFromDatabase)
+            {
+                transactions.Add(TransactionViewDto.ConvertFromTransaction(transaction));
+            }
+            return transactions;
         }
 
-        public IEnumerable<Transaction> GetReceivedTransactions(Guid userId)
+        public IEnumerable<TransactionViewDto> GetReceivedTransactions(Guid userId)
         {
-            return _unitOfWork.TransactionRepository.GetReceivedTransactionsByUserId(userId);
+            var transactions = new List<TransactionViewDto>();
+            var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetReceivedTransactionsByUserId(userId);
+            foreach (var transaction in transactionsFromDatabase)
+            {
+                transactions.Add(TransactionViewDto.ConvertFromTransaction(transaction));
+            }
+            return transactions;
         }
     }
 }

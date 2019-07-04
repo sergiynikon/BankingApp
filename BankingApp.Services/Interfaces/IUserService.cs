@@ -6,7 +6,7 @@ namespace BankingApp.Services.Interfaces
 {
     public interface IUserService
     {
-        UserDto GetUser(Guid id);
-        IEnumerable<UserDto> GetAllUsers();
+        UserViewDto GetUser(Guid id);
+        IEnumerable<UserViewDto> GetAllUsers();
     }
 }
