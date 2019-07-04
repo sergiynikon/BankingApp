@@ -22,19 +22,10 @@ namespace BankingApp.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Required]
-        [MaxLength(20, ErrorMessage = "Login should be less than 20 symbols!")]
         public string Login { get; set; }
-
-        [Required]
-        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
         public string Email { get; set; }
-
-        [Required]
-        [Range(Constants.MinPasswordLength, Constants.MaxPasswordLength)]
         public string Password { get; set; }
-
-        public double Balance { get; set; }
+        public long Balance { get; set; }
 
         [InverseProperty("SenderUser")]
         public virtual ICollection<Transaction> SentTransactions { get; set; } = new List<Transaction>();

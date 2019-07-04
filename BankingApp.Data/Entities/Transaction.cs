@@ -12,15 +12,9 @@ namespace BankingApp.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Required]
         public DateTimeOffset TimeOfTransaction { get; set; }
-
-        [Required]
-        public double Amount { get; set; }
-
-        [Required]
+        public long Amount { get; set; }
         public TransactionType TransactionType { get; set; }
-
         public Guid? ReceiverUserId { get; set; } //TODO: check whether it works without nullable
 
         public Guid? SenderUserId { get; set; } //TODO: check whether it works without nullable
