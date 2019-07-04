@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using BankingApp.Data.Repositories.Interfaces;
 
-namespace BankingApp.Data.Repositories
+namespace BankingApp.Data.Repositories.Implementation
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {

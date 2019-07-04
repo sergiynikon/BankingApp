@@ -1,4 +1,4 @@
-﻿using BankingApp.Data.Repositories;
+﻿using BankingApp.Data.Repositories.Implementation;
 using BankingApp.Data.Repositories.Interfaces;
 using BankingApp.Data.UnitOfWork.Interfaces;
 
