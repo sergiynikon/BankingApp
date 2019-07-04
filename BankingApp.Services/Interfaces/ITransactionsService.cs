@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using BankingApp.Data.Entities;
+using BankingApp.DataTransfer;
 
 namespace BankingApp.Services.Interfaces
 {
     public interface ITransactionsService
     {
-        IEnumerable<Transaction> GetSentTransactions(Guid userId);
-        IEnumerable<Transaction> GetReceivedTransactions(Guid userId);
+        IEnumerable<TransactionDto> GetSentTransactions(Guid userId);
+        IEnumerable<TransactionDto> GetReceivedTransactions(Guid userId);
     }
 }
