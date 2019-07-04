@@ -16,18 +16,18 @@ namespace BankingApp.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public UserDto GetUser(Guid id)
+        public UserViewDto GetUser(Guid id)
         {
-            return UserDto.ConvertFromUser(_unitOfWork.UserRepository.GetById(id));
+            return UserViewDto.ConvertFromUser(_unitOfWork.UserRepository.GetById(id));
         }
 
-        public IEnumerable<UserDto> GetAllUsers()
+        public IEnumerable<UserViewDto> GetAllUsers()
         {
-            var users = new List<UserDto>();
+            var users = new List<UserViewDto>();
             var usersFromDatabase = _unitOfWork.UserRepository.GetAll();
             foreach (var user in usersFromDatabase)
             {
-                users.Add(UserDto.ConvertFromUser(user));
+                users.Add(UserViewDto.ConvertFromUser(user));
             }
             return users;
         }

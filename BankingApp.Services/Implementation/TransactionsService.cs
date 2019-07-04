@@ -15,24 +15,24 @@ namespace BankingApp.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<TransactionDto> GetSentTransactions(Guid userId)
+        public IEnumerable<TransactionViewDto> GetSentTransactions(Guid userId)
         {
-            var transactions = new List<TransactionDto>();
+            var transactions = new List<TransactionViewDto>();
             var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetSentTransactionsByUserId(userId);
             foreach (var transaction in transactionsFromDatabase)
             {
-                transactions.Add(TransactionDto.ConvertFromTransaction(transaction));
+                transactions.Add(TransactionViewDto.ConvertFromTransaction(transaction));
             }
             return transactions;
         }
 
-        public IEnumerable<TransactionDto> GetReceivedTransactions(Guid userId)
+        public IEnumerable<TransactionViewDto> GetReceivedTransactions(Guid userId)
         {
-            var transactions = new List<TransactionDto>();
+            var transactions = new List<TransactionViewDto>();
             var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetReceivedTransactionsByUserId(userId);
             foreach (var transaction in transactionsFromDatabase)
             {
-                transactions.Add(TransactionDto.ConvertFromTransaction(transaction));
+                transactions.Add(TransactionViewDto.ConvertFromTransaction(transaction));
             }
             return transactions;
         }
