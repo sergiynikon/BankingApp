@@ -74,17 +74,7 @@ namespace BankingApp.Services
 
         public Guid GetUserId(IEnumerable<Claim> claims)
         {
-            return Guid.Parse(claims.First(c => c.Type == "Id").Value);
-        }
-
-        public bool UserLoginExists(string login)
-        {
-            return _unitOfWork.UserRepository.UserLoginExists(login);
-        }
-
-        public bool UserEmailExists(string email)
-        {
-            return _unitOfWork.UserRepository.UserEmailExists(email);
+            return Guid.Parse(claims.First(c => c.Type == ClaimTypes.Name).Value);
         }
 
         private ClaimsIdentity GetClaimsIdentity(string login, string password)

@@ -52,6 +52,7 @@ namespace BankingApp.API
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IAuthenticateService, AuthenticateService>();
+            services.AddScoped<IUserService, UserService>();
 
         }
 
