@@ -15,14 +15,11 @@ namespace BankingApp.Data.Entities
         public DateTimeOffset TimeOfTransaction { get; set; }
         public long Amount { get; set; }
         public TransactionType TransactionType { get; set; }
-        public Guid? ReceiverUserId { get; set; } //TODO: check whether it works without nullable
 
+        public Guid? ReceiverUserId { get; set; } //TODO: check whether it works without nullable
         public Guid? SenderUserId { get; set; } //TODO: check whether it works without nullable
 
-        [ForeignKey("ReceiverUserId")]
         public virtual User ReceiverUser { get; set; }
-
-        [ForeignKey("SenderUserId")]
         public virtual User SenderUser { get; set; }
 
         //TODO: make some constructors

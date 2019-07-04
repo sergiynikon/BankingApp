@@ -25,10 +25,7 @@ namespace BankingApp.Data.Entities
         public string Password { get; set; }
         public long Balance { get; set; }
 
-        [InverseProperty("SenderUser")]
         public virtual ICollection<Transaction> SentTransactions { get; set; } = new List<Transaction>();
-
-        [InverseProperty("ReceiverUser")]
         public virtual ICollection<Transaction> ReceivedTransactions { get; set; } = new List<Transaction>();
     }
 }
