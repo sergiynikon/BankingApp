@@ -9,7 +9,6 @@ namespace BankingApp.Data.Entities
     {
         public User(string login, string email, string password)
         {
-            Id = new Guid(); //TODO: check whether it works without creating new Guid()
             Login = login;
             Email = email;
             Password = password;
