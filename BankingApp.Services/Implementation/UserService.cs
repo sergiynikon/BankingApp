@@ -5,7 +5,7 @@ using BankingApp.Data.UnitOfWork.Interfaces;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
 
-namespace BankingApp.Services
+namespace BankingApp.Services.Implementation
 {
     public class UserService : IUserService
     {

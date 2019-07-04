@@ -11,7 +11,7 @@ using BankingApp.Services.Helpers;
 using BankingApp.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BankingApp.Services
+namespace BankingApp.Services.Implementation
 {
     public class AuthenticateService : IAuthenticateService
     {

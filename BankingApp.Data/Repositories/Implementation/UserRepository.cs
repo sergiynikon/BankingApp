@@ -3,7 +3,7 @@ using BankingApp.Data.Entities;
 using BankingApp.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BankingApp.Data.Repositories
+namespace BankingApp.Data.Repositories.Implementation
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
