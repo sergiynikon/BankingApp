@@ -12,10 +12,10 @@ namespace BankingApp.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Login = table.Column<string>(maxLength: 20, nullable: false),
+                    Login = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
-                    Balance = table.Column<double>(nullable: false)
+                    Balance = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,8 +27,9 @@ namespace BankingApp.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    TimeOfTransaction = table.Column<string>(nullable: true),
-                    Amount = table.Column<double>(nullable: false),
+                    TimeOfTransaction = table.Column<DateTimeOffset>(nullable: false),
+                    Amount = table.Column<long>(nullable: false),
+                    TransactionType = table.Column<int>(nullable: false),
                     ReceiverUserId = table.Column<Guid>(nullable: true),
                     SenderUserId = table.Column<Guid>(nullable: true)
                 },

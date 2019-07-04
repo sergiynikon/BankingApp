@@ -24,7 +24,7 @@ namespace BankingApp.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Amount");
+                    b.Property<long>("Amount");
 
                     b.Property<Guid?>("ReceiverUserId");
 
@@ -48,17 +48,13 @@ namespace BankingApp.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Balance");
+                    b.Property<long>("Balance");
 
-                    b.Property<string>("Email")
-                        .IsRequired();
+                    b.Property<string>("Email");
 
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasMaxLength(20);
+                    b.Property<string>("Login");
 
-                    b.Property<string>("Password")
-                        .IsRequired();
+                    b.Property<string>("Password");
 
                     b.HasKey("Id");
 
