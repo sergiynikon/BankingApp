@@ -15,7 +15,7 @@ namespace BankingApp.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<TransactionViewDto> GetSentTransactions(Guid userId)
+        private IEnumerable<TransactionViewDto> GetSentTransactions(Guid userId)
         {
             var transactions = new List<TransactionViewDto>();
             var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetSentTransactionsByUserId(userId);
@@ -28,7 +28,7 @@ namespace BankingApp.Services.Implementation
             return transactions;
         }
 
-        public IEnumerable<TransactionViewDto> GetReceivedTransactions(Guid userId)
+        private IEnumerable<TransactionViewDto> GetReceivedTransactions(Guid userId)
         {
             var transactions = new List<TransactionViewDto>();
             var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetReceivedTransactionsByUserId(userId);
@@ -39,6 +39,16 @@ namespace BankingApp.Services.Implementation
             }
 
             return transactions;
+        }
+
+        public ResultDto GetUserTransactions(Guid userId)
+        {
+            return ResultDto.Success(
+                new
+                {
+                    ReceivedTransactions = GetReceivedTransactions(userId),
+                    SentTransactions = GetSentTransactions(userId)
+                });
         }
     }
 }

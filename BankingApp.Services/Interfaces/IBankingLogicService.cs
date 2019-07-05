@@ -5,8 +5,8 @@ namespace BankingApp.Services.Interfaces
 {
     public interface IBankingLogicService
     {
-        OperationDetailsDto Deposit(Guid senderUserId, double amount);
-        OperationDetailsDto Withdraw(Guid senderUserId, double amount);
-        OperationDetailsDto Transfer(Guid senderUserId, Guid receiverUserId, double amount);
+        ResultDto Deposit(Guid senderUserId, double amount);
+        ResultDto Withdraw(Guid senderUserId, double amount);
+        ResultDto Transfer(Guid senderUserId, Guid receiverUserId, double amount);
     }
 }

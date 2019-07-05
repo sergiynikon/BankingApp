@@ -20,12 +20,7 @@ namespace BankingApp.API.Controllers
         [HttpGet]
         public IActionResult GetUserTransactions()
         {
-            //TODO: return object 
-            return Ok(new
-            {
-                receivedTransactions = _transactionsService.GetReceivedTransactions(this.GetCurrentUserId()),
-                sentTransactions = _transactionsService.GetSentTransactions(this.GetCurrentUserId())
-            });
+            return Ok(_transactionsService.GetUserTransactions(this.GetCurrentUserId()));
         }
     }
 }
