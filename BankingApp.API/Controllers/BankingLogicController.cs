@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BankingApp.API.Extensions;
+﻿using BankingApp.API.Extensions;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BankingApp.API.Controllers
 {
@@ -30,6 +24,7 @@ namespace BankingApp.API.Controllers
         {
 
             var result = _bankingLogicService.Deposit(this.GetCurrentUserId(), model.Amount);
+
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
@@ -44,6 +39,7 @@ namespace BankingApp.API.Controllers
         {
 
             var result = _bankingLogicService.Withdraw(this.GetCurrentUserId(), model.Amount);
+
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
@@ -57,6 +53,7 @@ namespace BankingApp.API.Controllers
         public IActionResult Transfer([FromBody] TransferModelDto model)
         {
             var result = _bankingLogicService.Transfer(this.GetCurrentUserId(), model.ReceiverUserId, model.Amount);
+
             if (!result.IsSuccess)
             {
                 return BadRequest(result);

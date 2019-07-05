@@ -7,13 +7,6 @@ namespace BankingApp.DataTransfer
         private const string DefaultErrorMessage = "Something went wrong";
         private static readonly string SuccessMessage = "Success";
 
-        private OperationDetailsDto(bool isSuccess, string message, double amount)
-        {
-            IsSuccess = isSuccess;
-            Message = message;
-            Amount = amount;
-        }
-
         private OperationDetailsDto(bool isSuccess, string message, double amount, Guid senderUserId, Guid receiverUserId)
         {
             IsSuccess = isSuccess;

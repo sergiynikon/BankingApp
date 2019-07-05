@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BankingApp.Data.UnitOfWork.Interfaces;
+using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
 
@@ -46,6 +46,7 @@ namespace BankingApp.Services.Implementation
             }
 
             var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
+
             senderUser.Balance += longAmount;
             _unitOfWork.Save();
 
@@ -65,6 +66,7 @@ namespace BankingApp.Services.Implementation
             }
 
             var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
+
             if (senderUser.Balance < longAmount)
             {
                 return OperationDetailsDto.Error(senderUserId, ErrorMessageWithdrawNotEnoughMoney);
@@ -83,6 +85,7 @@ namespace BankingApp.Services.Implementation
             long longAmount = CastFromDouble(amount);
 
             var receiverUser = _unitOfWork.UserRepository.GetById(receiverUserId);
+
             if (receiverUser == null)
             {
                 return OperationDetailsDto.Error(senderUserId, receiverUserId, ErrorMessageTransferWhenReceiverUserNotFound);

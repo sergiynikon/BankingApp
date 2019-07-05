@@ -1,6 +1,5 @@
 ﻿using BankingApp.Data.Repositories.Implementation;
 using BankingApp.Data.Repositories.Interfaces;
-using BankingApp.Data.UnitOfWork.Interfaces;
 
 namespace BankingApp.Data.UnitOfWork
 {
@@ -14,7 +13,6 @@ namespace BankingApp.Data.UnitOfWork
         {
             _context = context;
         }
-
 
         public IUserRepository UserRepository
         {
