@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BankingApp.Data.Entities;
 using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
@@ -48,7 +49,11 @@ namespace BankingApp.Services.Implementation
             var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
 
             senderUser.Balance += longAmount;
-            //TODO: Add transaction to specific user with transactiontype = deposit
+            _unitOfWork.TransactionRepository.Add(new Transaction(
+                senderUserId: senderUserId,
+                receiverUserId: null,
+                amount: longAmount,
+                transactionType: TransactionType.Deposit));
             _unitOfWork.Save();
 
             // when amount == 3.1482 for example, long amount will be equal to 314, resultAmount will be equal to 3.14
@@ -74,7 +79,11 @@ namespace BankingApp.Services.Implementation
             }
 
             senderUser.Balance -= longAmount;
-            //TODO: Add transaction to specific user with transactiontype = withdraw
+            _unitOfWork.TransactionRepository.Add(new Transaction(
+                senderUserId: senderUserId, 
+                receiverUserId: null, 
+                amount: longAmount, 
+                transactionType: TransactionType.Withdraw));
             _unitOfWork.Save();
 
             var resultAmount = CastFromLong(longAmount);
@@ -107,7 +116,11 @@ namespace BankingApp.Services.Implementation
 
             receiverUser.Balance += longAmount;
             senderUser.Balance -= longAmount;
-            //TODO: Add transaction to specific user with transactiontype = deposit
+            _unitOfWork.TransactionRepository.Add(new Transaction(
+                senderUserId: senderUserId,
+                receiverUserId: receiverUserId,
+                amount: longAmount,
+                transactionType: TransactionType.Transfer));
             _unitOfWork.Save();
 
             var resultAmount = CastFromLong(longAmount);
