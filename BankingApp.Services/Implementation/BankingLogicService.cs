@@ -11,7 +11,14 @@ namespace BankingApp.Services.Implementation
 {
     public class BankingLogicService : IBankingLogicService
     {
-        private const int CentValue = 100;
+        private static readonly int CentValue = 100;
+        private static readonly string ErrorMessageDepositNonPositiveAmount = "Can not deposit non positive amount";
+        private static readonly string ErrorMessageWithdrawNonPositiveAmount = "Can not withdraw non positive amount";
+        private static readonly string ErrorMessageWithdrawNotEnoughMoney = "Can not withdraw. Not enough money";
+        private static readonly string ErrorMessageTransferWhenReceiverUserNotFound = "Can not find receiver";
+        private static readonly string ErrorMessageTransferNonPositiveAmount = "Can not transfer non positive amount";
+        private static readonly string ErrorMessageTransferNotEnoughMoney = "Can not transfer. Not enough money";
+
         private readonly IUnitOfWork _unitOfWork;
 
         public BankingLogicService(IUnitOfWork unitOfWork)
@@ -26,48 +33,76 @@ namespace BankingApp.Services.Implementation
 
         private double CastFromLong(long value)
         {
-            return (value / CentValue);
+            return (value / (double)CentValue);
         }
 
-        public OperationDetailsDto Deposit(double amount, Guid senderUserId)
+        public OperationDetailsDto Deposit(Guid senderUserId, double amount)
         {
-            if (amount <= 0)
+            long longAmount = CastFromDouble(amount);
+
+            if (longAmount <= 0)
             {
-                return OperationDetailsDto.Error("Can not open deposit with negative amount");
+                return OperationDetailsDto.Error(senderUserId, ErrorMessageDepositNonPositiveAmount);
             }
 
-            _unitOfWork.UserRepository.GetById(senderUserId).Balance += CastFromDouble(amount);
+            _unitOfWork.UserRepository.GetById(senderUserId).Balance += CastFromDouble(longAmount);
 
-            return OperationDetailsDto.Success(amount);
+            // when amount == 3.1482 for example, long amount will be equal to 314, resultAmount will be equal to 3.14
+            var resultAmount = CastFromLong(longAmount);
+
+            return OperationDetailsDto.Success(senderUserId, resultAmount);
         }
 
-        public OperationDetailsDto Withdraw(long amount, Guid id)
+        public OperationDetailsDto Withdraw(Guid senderUserId, double amount)
         {
-            var senderUser = _unitOfWork.UserRepository.GetById(id);
-            if (senderUser.Balance < amount)
+            long longAmount = CastFromDouble(amount);
+
+            if (longAmount <= 0)
             {
-                return OperationDetailsDto.Error("Can not withdraw money, not enough money");
+                return OperationDetailsDto.Error(senderUserId, ErrorMessageWithdrawNonPositiveAmount);
             }
 
-            return OperationDetailsDto.Success(amount);
-        }
-
-        public OperationDetailsDto Transfer(Guid senderUserId, Guid receiverUserId, long amount)
-        {
             var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
+            if (senderUser.Balance < longAmount)
+            {
+                return OperationDetailsDto.Error(senderUserId, ErrorMessageWithdrawNotEnoughMoney);
+            }
 
-            var receiverUser = _unitOfWork.UserRepository.GetByEmail(receiverUserEmail);
+            senderUser.Balance -= CastFromDouble(longAmount);
+
+            var resultAmount = CastFromLong(longAmount);
+
+            return OperationDetailsDto.Success(senderUserId, resultAmount);
+        }
+
+        public OperationDetailsDto Transfer(Guid senderUserId, Guid receiverUserId, double amount)
+        {
+            long longAmount = CastFromDouble(amount);
+
+            var receiverUser = _unitOfWork.UserRepository.GetById(receiverUserId);
             if (receiverUser == null)
             {
-                return OperationDetailsDto.Error("Can not find receiver user");
+                return OperationDetailsDto.Error(senderUserId, receiverUserId, ErrorMessageTransferWhenReceiverUserNotFound);
             }
 
-            if (senderUser.Balance < amount)
+            if (longAmount <= 0)
             {
-                return OperationDetailsDto.Error("Can not send money, not enough money");
+                return OperationDetailsDto.Error(senderUserId, ErrorMessageTransferNonPositiveAmount);
             }
 
-            return OperationDetailsDto.Success(senderUserEmail, receiverUserEmail, amount);
+            var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
+
+            if (senderUser.Balance < longAmount)
+            {
+                return OperationDetailsDto.Error(senderUserId, receiverUserId, ErrorMessageTransferNotEnoughMoney);
+            }
+
+            receiverUser.Balance += longAmount;
+            senderUser.Balance -= longAmount;
+
+            var resultAmount = CastFromLong(longAmount);
+
+            return OperationDetailsDto.Success(senderUserId, receiverUserId, resultAmount);
         }
     }
 }

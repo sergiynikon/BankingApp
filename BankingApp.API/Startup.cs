@@ -54,6 +54,7 @@ namespace BankingApp.API
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITransactionsService, TransactionsService>();
+            services.AddScoped<IBankingLogicService, BankingLogicService>();
 
         }
 

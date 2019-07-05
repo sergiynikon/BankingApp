@@ -28,12 +28,40 @@ namespace BankingApp.API.Controllers
         public IActionResult Deposit([FromBody] double amount)
         {
 
-            var result = _bankingLogicService.Deposit(amount, this.GetCurrentUserId());
+            var result = _bankingLogicService.Deposit(this.GetCurrentUserId(), amount);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
-            
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("Withdraw")]
+        public IActionResult Withdraw([FromBody] double amount)
+        {
+
+            var result = _bankingLogicService.Withdraw(this.GetCurrentUserId(), amount);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("Transfer")]
+        public IActionResult Transfer([FromBody] Guid receiverUserId, double amount)
+        {
+            var result = _bankingLogicService.Transfer(this.GetCurrentUserId(), receiverUserId, amount);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BankingApp.Data.Entities;
-using BankingApp.DataTransfer.Helpers;
 
 namespace BankingApp.DataTransfer
 {
     public class RegisterDto
     {
+        private const int MinPasswordLength = 5;
+
         [Required]
         public string Login { get; set; }
 
@@ -14,7 +15,7 @@ namespace BankingApp.DataTransfer
         public string Email { get; set; }
 
         [Required]
-        [MinLength(Constants.MinPasswordLength)]
+        [MinLength(MinPasswordLength)]
         public string Password { get; set; }
 
         [Required]

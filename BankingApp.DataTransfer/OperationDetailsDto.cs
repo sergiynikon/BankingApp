@@ -1,49 +1,78 @@
 ﻿using System;
-using BankingApp.DataTransfer.Helpers;
 
 namespace BankingApp.DataTransfer
 {
     public class OperationDetailsDto
     {
+        private const string DefaultErrorMessage = "Something went wrong";
+        private static readonly string SuccessMessage = "Success";
+
         private OperationDetailsDto(bool isSuccess, string message, double amount)
         {
             IsSuccess = isSuccess;
             Message = message;
             Amount = amount;
         }
-        private OperationDetailsDto(bool isSuccess, string message, double amount, string senderUserEmail, string receiverUserEmail)
+
+        private OperationDetailsDto(bool isSuccess, string message, double amount, Guid senderUserId, Guid receiverUserId)
         {
             IsSuccess = isSuccess;
             Message = message;
             Amount = amount;
-            SenderUserEmail = senderUserEmail;
-            ReceiverUserEmail = receiverUserEmail;
+            SenderUserId = senderUserId;
+            ReceiverUserId = receiverUserId;
+        }
+
+        private OperationDetailsDto(bool isSuccess, string message, double amount, Guid senderUserId)
+        {
+            IsSuccess = isSuccess;
+            Message = message;
+            Amount = amount;
+            SenderUserId = senderUserId;
         }
 
         public bool IsSuccess { get; }
         public string Message { get; }
         public double Amount { get; }
+        public Guid SenderUserId { get; }
+        public Guid ReceiverUserId { get; }
 
-        public string SenderUserEmail { get; }
-        public string ReceiverUserEmail { get; }
-
-        public static OperationDetailsDto Error(string senderUserEmail, string errorMessage = Constants.DefaultErrorMessage)
+        public static OperationDetailsDto Error(Guid senderUserId, Guid receiverUserId, string errorMessage = DefaultErrorMessage)
         {
             return new OperationDetailsDto(
                 isSuccess: false,
                 message: errorMessage,
-                amount: 0);
+                amount: 0,
+                senderUserId: senderUserId,
+                receiverUserId: receiverUserId);
         }
 
-        public static OperationDetailsDto Success(string senderUserEmail, string receiverUserEmail, double amount)
+        public static OperationDetailsDto Error(Guid senderUserId, string errorMessage = DefaultErrorMessage)
+        {
+            return new OperationDetailsDto(
+                isSuccess: false,
+                message: errorMessage,
+                amount: 0,
+                senderUserId: senderUserId);
+        }
+
+        public static OperationDetailsDto Success(Guid senderUserId, Guid receiverUserId, double amount)
         {
             return new OperationDetailsDto(
                 isSuccess: true,
-                message: Constants.SuccessMessage,
+                message: SuccessMessage,
                 amount: amount,
-                senderUserEmail: senderUserEmail,
-                receiverUserEmail: receiverUserEmail);
+                senderUserId: senderUserId,
+                receiverUserId: receiverUserId);
         }
 
+        public static OperationDetailsDto Success(Guid senderUserId, double amount)
+        {
+            return new OperationDetailsDto(
+                isSuccess: true,
+                message: SuccessMessage,
+                amount: amount,
+                senderUserId: senderUserId);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using BankingApp.API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using BankingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -24,9 +25,7 @@ namespace BankingApp.API.Controllers
         [Route("Current")]
         public IActionResult GetCurrentUser()
         {
-            var userId = _authenticateService.GetUserId(this.User.Claims);
-
-            return Ok(_userService.GetUser(userId));
+            return Ok(_userService.GetUser(this.GetCurrentUserId()));
         }
 
         [AllowAnonymous]

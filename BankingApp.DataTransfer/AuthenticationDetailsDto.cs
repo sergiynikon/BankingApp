@@ -1,9 +1,10 @@
-﻿using BankingApp.DataTransfer.Helpers;
-
-namespace BankingApp.DataTransfer
+﻿namespace BankingApp.DataTransfer
 {
     public class AuthenticationDetailsDto
     {
+        private const string DefaultErrorMessage = "Something went wrong";
+        private static readonly string SuccessMessage = "Success";
+
         private AuthenticationDetailsDto(bool isSuccess, string message)
         {
             IsSuccess = isSuccess;
@@ -13,7 +14,7 @@ namespace BankingApp.DataTransfer
         public bool IsSuccess { get; }
         public string Message { get; }
 
-        public static AuthenticationDetailsDto Error(string errorMessage = Constants.DefaultErrorMessage)
+        public static AuthenticationDetailsDto Error(string errorMessage = DefaultErrorMessage)
         {
             return new AuthenticationDetailsDto(
                 isSuccess: false,
@@ -24,7 +25,7 @@ namespace BankingApp.DataTransfer
         {
             return new AuthenticationDetailsDto(
                 isSuccess: true,
-                message: Constants.SuccessMessage);
+                message: SuccessMessage);
         }
         
     }

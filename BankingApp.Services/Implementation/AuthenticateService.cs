@@ -49,6 +49,11 @@ namespace BankingApp.Services.Implementation
             return encodedJwt;
         }
 
+        public User GetUserIdentity(string login, string password)
+        {
+            return _unitOfWork.UserRepository.Find(u => u.Login == login && u.Password == password).SingleOrDefault();
+        }
+
         public AuthenticationDetailsDto RegisterUser(RegisterDto identity)
         {
             if (_unitOfWork.UserRepository.UserLoginExists(identity.Login))
