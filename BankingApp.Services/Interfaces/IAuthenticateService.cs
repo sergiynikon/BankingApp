@@ -12,6 +12,5 @@ namespace BankingApp.Services.Interfaces
         string GetIdentityToken(LoginDto identity);
         User GetUserIdentity(string login, string password);
         AuthenticationDetailsDto RegisterUser(RegisterDto identity);
-        Guid GetUserId(IEnumerable<Claim> claims);
     }
 }

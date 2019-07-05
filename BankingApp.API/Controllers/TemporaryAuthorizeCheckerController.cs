@@ -18,5 +18,10 @@ namespace BankingApp.API.Controllers
         {
             return Ok("you are authorized!");
         }
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok("you are All!");
+        }
     }
 }
