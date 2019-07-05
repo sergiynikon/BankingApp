@@ -13,6 +13,14 @@ namespace BankingApp.Data.Entities
 
     public class Transaction
     {
+        public Transaction(Guid? senderUserId, Guid? receiverUserId, long amount, TransactionType transactionType)
+        {
+            TimeOfTransaction = DateTimeOffset.Now;
+            Amount = amount;
+            SenderUserId = senderUserId;
+            ReceiverUserId = receiverUserId;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
@@ -26,7 +34,5 @@ namespace BankingApp.Data.Entities
 
         public virtual User ReceiverUser { get; set; }
         public virtual User SenderUser { get; set; }
-
-        //TODO: make some constructors
     }
 }
