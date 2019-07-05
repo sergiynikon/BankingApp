@@ -1,4 +1,5 @@
-﻿using BankingApp.Services.Interfaces;
+﻿using BankingApp.API.Extensions;
+using BankingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,23 +11,16 @@ namespace BankingApp.API.Controllers
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionsService _transactionsService;
-        private readonly IAuthenticateService _authenticateService;
 
-        public TransactionsController(ITransactionsService transactionsService, IAuthenticateService authenticateService)
+        public TransactionsController(ITransactionsService transactionsService)
         {
             _transactionsService = transactionsService;
-            _authenticateService = authenticateService;
         }
 
         [HttpGet]
         public IActionResult GetUserTransactions()
         {
-            var userId = _authenticateService.GetUserId(User.Claims);
-            return Ok(new
-            {
-                receivedTransactions = _transactionsService.GetReceivedTransactions(userId),
-                sentTransactions = _transactionsService.GetSentTransactions(userId)
-            });
+            return Ok(_transactionsService.GetUserTransactions(this.GetCurrentUserId()));
         }
     }
 }

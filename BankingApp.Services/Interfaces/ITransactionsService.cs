@@ -6,7 +6,6 @@ namespace BankingApp.Services.Interfaces
 {
     public interface ITransactionsService
     {
-        IEnumerable<TransactionViewDto> GetSentTransactions(Guid userId);
-        IEnumerable<TransactionViewDto> GetReceivedTransactions(Guid userId);
+        ResultDto GetUserTransactions(Guid userId);
     }
 }

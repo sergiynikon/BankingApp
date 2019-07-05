@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BankingApp.Data.UnitOfWork.Interfaces;
+using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
 
@@ -25,10 +25,12 @@ namespace BankingApp.Services.Implementation
         {
             var users = new List<UserViewDto>();
             var usersFromDatabase = _unitOfWork.UserRepository.GetAll();
+
             foreach (var user in usersFromDatabase)
             {
                 users.Add(UserViewDto.ConvertFromUser(user));
             }
+
             return users;
         }
     }

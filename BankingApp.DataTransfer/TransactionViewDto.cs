@@ -11,9 +11,8 @@ namespace BankingApp.DataTransfer
         public string SenderUserEmail { get; set; }
         public string ReceiverUserEmail { get; set; }
 
-        public static TransactionViewDto ConvertFromTransaction(Transaction transaction)
-        {
-            return new TransactionViewDto()
+        public static TransactionViewDto ConvertFromTransaction(Transaction transaction) =>
+            new TransactionViewDto()
             {
                 TransactionType = transaction.TransactionType.ToString(),
                 Amount = transaction.Amount,
@@ -21,6 +20,5 @@ namespace BankingApp.DataTransfer
                 SenderUserEmail = transaction.SenderUser?.Email,
                 ReceiverUserEmail = transaction.ReceiverUser?.Email
             };
-        }
     }
 }
