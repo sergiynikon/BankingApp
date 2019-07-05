@@ -45,9 +45,7 @@ namespace BankingApp.Services.Implementation
                 return OperationDetailsDto.Error(senderUserId, ErrorMessageDepositNonPositiveAmount);
             }
 
-            var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
-            senderUser.Balance += longAmount;
-            _unitOfWork.Save();
+            _unitOfWork.UserRepository.GetById(senderUserId).Balance += CastFromDouble(longAmount);
 
             // when amount == 3.1482 for example, long amount will be equal to 314, resultAmount will be equal to 3.14
             var resultAmount = CastFromLong(longAmount);
@@ -70,8 +68,7 @@ namespace BankingApp.Services.Implementation
                 return OperationDetailsDto.Error(senderUserId, ErrorMessageWithdrawNotEnoughMoney);
             }
 
-            senderUser.Balance -= longAmount;
-            _unitOfWork.Save();
+            senderUser.Balance -= CastFromDouble(longAmount);
 
             var resultAmount = CastFromLong(longAmount);
 
@@ -102,7 +99,6 @@ namespace BankingApp.Services.Implementation
 
             receiverUser.Balance += longAmount;
             senderUser.Balance -= longAmount;
-            _unitOfWork.Save();
 
             var resultAmount = CastFromLong(longAmount);
 
