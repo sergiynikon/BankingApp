@@ -16,7 +16,7 @@
         public string Message { get; }
         public object Result { get; }
 
-        public static ResultDto Success(object result)
+        public static ResultDto Success(object result = null)
         {
             return new ResultDto(
                 isSuccess: true,
@@ -24,7 +24,7 @@
                 result: result);
         }
 
-        public static ResultDto Error(string errorMessage, object result)
+        public static ResultDto Error(string errorMessage, object result = null)
         {
             return new ResultDto(
                 isSuccess: false,

@@ -22,18 +22,13 @@ namespace BankingApp.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public string GetIdentityToken(LoginDto identity)
+        public ResultDto GetIdentityToken(LoginDto identity)
         {
-            if (identity == null)
-            {
-                return null;
-            }
-            
             var claimsIdentity = GetClaimsIdentity(identity.Login, identity.Password);
 
             if (claimsIdentity == null)
             {
-                return null;
+                return ResultDto.Error("Can not get identity");
             }
 
             var now = DateTime.UtcNow;
@@ -48,7 +43,11 @@ namespace BankingApp.Services.Implementation
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            return encodedJwt;
+            return ResultDto.Success(
+                new
+                {
+                    encodedJwt = encodedJwt
+                });
         }
 
         public User GetUserIdentity(string login, string password)
@@ -56,16 +55,16 @@ namespace BankingApp.Services.Implementation
             return _unitOfWork.UserRepository.Find(u => u.Login == login && u.Password == password).SingleOrDefault();
         }
 
-        public AuthenticationDetailsDto RegisterUser(RegisterDto identity)
+        public ResultDto RegisterUser(RegisterDto identity)
         {
             if (_unitOfWork.UserRepository.UserLoginExists(identity.Login))
             {
-                return AuthenticationDetailsDto.Error($"login {identity.Login} already exists!");
+                return ResultDto.Error($"login {identity.Login} already exists!");
             }
 
             if (_unitOfWork.UserRepository.UserEmailExists(identity.Email))
             {
-                return AuthenticationDetailsDto.Error($"email {identity.Email} already taken!");
+                return ResultDto.Error($"email {identity.Email} already taken!");
             }
 
             var user = identity.ConvertToUser();
@@ -73,7 +72,7 @@ namespace BankingApp.Services.Implementation
             _unitOfWork.UserRepository.Add(user);
             _unitOfWork.Save();
 
-            return AuthenticationDetailsDto.Success();
+            return ResultDto.Success();
         }
 
         private ClaimsIdentity GetClaimsIdentity(string login, string password)

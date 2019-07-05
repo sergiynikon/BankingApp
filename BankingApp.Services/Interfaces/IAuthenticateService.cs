@@ -9,8 +9,8 @@ namespace BankingApp.Services.Interfaces
 {
     public interface IAuthenticateService
     {
-        string GetIdentityToken(LoginDto identity);
+        ResultDto GetIdentityToken(LoginDto identity);
         User GetUserIdentity(string login, string password);
-        AuthenticationDetailsDto RegisterUser(RegisterDto identity);
+        ResultDto RegisterUser(RegisterDto identity);
     }
 }

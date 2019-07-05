@@ -30,15 +30,10 @@ namespace BankingApp.API.Controllers
 
             if (userIdentity == null)
             {
-                return BadRequest(AuthenticationDetailsDto.Error("Incorrect login or password!"));
+                return BadRequest(ResultDto.Error("Incorrect login or password!"));
             }
 
             var token = _authenticateService.GetIdentityToken(identity);
-
-            if (token == null)
-            {
-                return BadRequest(AuthenticationDetailsDto.Error());
-            }
 
             return Ok(token);
         }
