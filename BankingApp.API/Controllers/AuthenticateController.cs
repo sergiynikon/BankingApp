@@ -34,6 +34,7 @@ namespace BankingApp.API.Controllers
             }
 
             var token = _authenticateService.GetIdentityToken(identity);
+
             if (token == null)
             {
                 return BadRequest(AuthenticationDetailsDto.Error());

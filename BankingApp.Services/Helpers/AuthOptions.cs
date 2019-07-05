@@ -10,6 +10,7 @@ namespace BankingApp.Services.Helpers
         private static IConfiguration ConstantsConfig { get; } = SetConfiguration()
             .GetSection("Constants")
             .GetSection("ForAuthOptions");
+
         private static IConfiguration SetConfiguration()
         {
             var builder = new ConfigurationBuilder()

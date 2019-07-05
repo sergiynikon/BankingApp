@@ -1,6 +1,6 @@
 ﻿using BankingApp.Data.Repositories.Interfaces;
 
-namespace BankingApp.Data.UnitOfWork.Interfaces
+namespace BankingApp.Data.UnitOfWork
 {
     public interface IUnitOfWork
     {

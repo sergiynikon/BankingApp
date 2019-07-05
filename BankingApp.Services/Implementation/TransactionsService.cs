@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BankingApp.Data.UnitOfWork.Interfaces;
+using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
 
@@ -19,10 +19,12 @@ namespace BankingApp.Services.Implementation
         {
             var transactions = new List<TransactionViewDto>();
             var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetSentTransactionsByUserId(userId);
+
             foreach (var transaction in transactionsFromDatabase)
             {
                 transactions.Add(TransactionViewDto.ConvertFromTransaction(transaction));
             }
+
             return transactions;
         }
 
@@ -30,10 +32,12 @@ namespace BankingApp.Services.Implementation
         {
             var transactions = new List<TransactionViewDto>();
             var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetReceivedTransactionsByUserId(userId);
+
             foreach (var transaction in transactionsFromDatabase)
             {
                 transactions.Add(TransactionViewDto.ConvertFromTransaction(transaction));
             }
+
             return transactions;
         }
     }

@@ -11,16 +11,6 @@ namespace BankingApp.Data.Repositories.Implementation
         {
         }
 
-        public User GetByLogin(string login)
-        {
-            return Entity.SingleOrDefault(u => u.Login == login);
-        }
-
-        public User GetByEmail(string email)
-        {
-            return Entity.SingleOrDefault(u => u.Email == email);
-        }
-
         public bool UserLoginExists(string login)
         {
             return Entity.Any(u => u.Login == login);

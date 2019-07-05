@@ -1,6 +1,5 @@
 ﻿using BankingApp.Data;
 using BankingApp.Data.UnitOfWork;
-using BankingApp.Data.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +27,7 @@ namespace BankingApp.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
@@ -38,15 +38,16 @@ namespace BankingApp.API
                 {
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        //what to validate
                         ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidateLifetime = true,
-                        //setup validate data
                         ValidIssuer = AuthOptions.Issuer,
+
+                        ValidateAudience = true,
                         ValidAudience = AuthOptions.Audience,
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
+
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+
+                        ValidateLifetime = true
                     };
                 });
             services.AddTransient<IUnitOfWork, UnitOfWork>();
@@ -58,7 +59,6 @@ namespace BankingApp.API
 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -67,12 +67,12 @@ namespace BankingApp.API
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
+
             app.UseMvc(routes => {
                 routes.MapRoute(
                     "default",

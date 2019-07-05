@@ -1,13 +1,18 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using BankingApp.Data.Enums;
 
 namespace BankingApp.Data.Entities
 {
+    public enum TransactionType
+    {
+        Deposit,
+        Withdraw,
+        Transfer
+    }
+
     public class Transaction
     {
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
@@ -16,8 +21,8 @@ namespace BankingApp.Data.Entities
         public long Amount { get; set; }
         public TransactionType TransactionType { get; set; }
 
-        public Guid? ReceiverUserId { get; set; } //TODO: check whether it works without nullable
-        public Guid? SenderUserId { get; set; } //TODO: check whether it works without nullable
+        public Guid? ReceiverUserId { get; set; }
+        public Guid? SenderUserId { get; set; }
 
         public virtual User ReceiverUser { get; set; }
         public virtual User SenderUser { get; set; }

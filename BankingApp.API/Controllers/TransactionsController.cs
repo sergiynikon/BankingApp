@@ -11,12 +11,10 @@ namespace BankingApp.API.Controllers
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionsService _transactionsService;
-        private readonly IAuthenticateService _authenticateService;
 
-        public TransactionsController(ITransactionsService transactionsService, IAuthenticateService authenticateService)
+        public TransactionsController(ITransactionsService transactionsService)
         {
             _transactionsService = transactionsService;
-            _authenticateService = authenticateService;
         }
 
         [HttpGet]

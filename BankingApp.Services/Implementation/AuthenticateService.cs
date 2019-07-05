@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using BankingApp.Data;
 using BankingApp.Data.Entities;
-using BankingApp.Data.UnitOfWork.Interfaces;
+using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Helpers;
 using BankingApp.Services.Interfaces;
@@ -16,6 +16,7 @@ namespace BankingApp.Services.Implementation
     public class AuthenticateService : IAuthenticateService
     {
         private readonly IUnitOfWork _unitOfWork;
+
         public AuthenticateService(DataContext context, IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -44,6 +45,7 @@ namespace BankingApp.Services.Implementation
                 claims: claimsIdentity.Claims,
                 expires: now.Add(TimeSpan.FromMinutes(AuthOptions.Lifetime)),
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return encodedJwt;
@@ -67,8 +69,10 @@ namespace BankingApp.Services.Implementation
             }
 
             var user = identity.ConvertToUser();
+
             _unitOfWork.UserRepository.Add(user);
             _unitOfWork.Save();
+
             return AuthenticationDetailsDto.Success();
         }
 
@@ -94,6 +98,7 @@ namespace BankingApp.Services.Implementation
                     "Token",
                     ClaimsIdentity.DefaultNameClaimType,
                     ClaimsIdentity.DefaultRoleClaimType);
+
             return claimsIdentity;
         }
     }

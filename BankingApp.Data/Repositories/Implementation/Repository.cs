@@ -10,13 +10,14 @@ namespace BankingApp.Data.Repositories.Implementation
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly DbContext _context;
-        protected readonly DbSet<TEntity> Entity;
 
         public Repository(DbContext context)
         {
             _context = context;
             Entity = context.Set<TEntity>();
         }
+
+        protected DbSet<TEntity> Entity { get; }
 
         public TEntity GetById(Guid id)
         {
