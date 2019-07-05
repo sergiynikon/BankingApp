@@ -49,11 +49,6 @@ namespace BankingApp.Services.Implementation
             return encodedJwt;
         }
 
-        public User GetUserIdentity(string login, string password)
-        {
-            return _unitOfWork.UserRepository.Find(u => u.Login == login && u.Password == password).SingleOrDefault();
-        }
-
         public AuthenticationDetailsDto RegisterUser(RegisterDto identity)
         {
             if (_unitOfWork.UserRepository.UserLoginExists(identity.Login))
@@ -70,11 +65,6 @@ namespace BankingApp.Services.Implementation
             _unitOfWork.UserRepository.Add(user);
             _unitOfWork.Save();
             return AuthenticationDetailsDto.Success();
-        }
-
-        public Guid GetUserId(IEnumerable<Claim> claims)
-        {
-            return Guid.Parse(claims.First(c => c.Type == ClaimTypes.Name).Value);
         }
 
         private ClaimsIdentity GetClaimsIdentity(string login, string password)
