@@ -48,6 +48,7 @@ namespace BankingApp.Services.Implementation
             var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
 
             senderUser.Balance += longAmount;
+            //TODO: Add transaction to specific user with transactiontype = deposit
             _unitOfWork.Save();
 
             // when amount == 3.1482 for example, long amount will be equal to 314, resultAmount will be equal to 3.14
@@ -73,6 +74,7 @@ namespace BankingApp.Services.Implementation
             }
 
             senderUser.Balance -= longAmount;
+            //TODO: Add transaction to specific user with transactiontype = withdraw
             _unitOfWork.Save();
 
             var resultAmount = CastFromLong(longAmount);
@@ -105,6 +107,7 @@ namespace BankingApp.Services.Implementation
 
             receiverUser.Balance += longAmount;
             senderUser.Balance -= longAmount;
+            //TODO: Add transaction to specific user with transactiontype = deposit
             _unitOfWork.Save();
 
             var resultAmount = CastFromLong(longAmount);
