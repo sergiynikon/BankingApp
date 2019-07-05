@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BankingApp.API.Extensions;
+using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,10 +26,10 @@ namespace BankingApp.API.Controllers
 
         [HttpPost]
         [Route("Deposit")]
-        public IActionResult Deposit([FromBody] double amount)
+        public IActionResult Deposit([FromBody] DepositModelDto model)
         {
 
-            var result = _bankingLogicService.Deposit(this.GetCurrentUserId(), amount);
+            var result = _bankingLogicService.Deposit(this.GetCurrentUserId(), model.Amount);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
@@ -39,10 +40,10 @@ namespace BankingApp.API.Controllers
 
         [HttpPost]
         [Route("Withdraw")]
-        public IActionResult Withdraw([FromBody] double amount)
+        public IActionResult Withdraw([FromBody] WithdrawModelDto model)
         {
 
-            var result = _bankingLogicService.Withdraw(this.GetCurrentUserId(), amount);
+            var result = _bankingLogicService.Withdraw(this.GetCurrentUserId(), model.Amount);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
@@ -53,9 +54,9 @@ namespace BankingApp.API.Controllers
 
         [HttpPost]
         [Route("Transfer")]
-        public IActionResult Transfer([FromBody] Guid receiverUserId, double amount)
+        public IActionResult Transfer([FromBody] TransferModelDto model)
         {
-            var result = _bankingLogicService.Transfer(this.GetCurrentUserId(), receiverUserId, amount);
+            var result = _bankingLogicService.Transfer(this.GetCurrentUserId(), model.ReceiverUserId, model.Amount);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
