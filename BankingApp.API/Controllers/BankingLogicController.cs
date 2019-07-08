@@ -20,10 +20,10 @@ namespace BankingApp.API.Controllers
 
         [HttpPost]
         [Route("Deposit")]
-        public IActionResult Deposit([FromBody] DepositModelDto model)
+        public IActionResult Deposit([FromBody] OperationModelDto model)
         {
 
-            var result = _bankingLogicService.Deposit(this.GetCurrentUserId(), model.Amount);
+            var result = _bankingLogicService.Deposit(this.GetCurrentUserId(), model);
 
             if (!result.IsSuccess)
             {
@@ -35,10 +35,10 @@ namespace BankingApp.API.Controllers
 
         [HttpPost]
         [Route("Withdraw")]
-        public IActionResult Withdraw([FromBody] WithdrawModelDto model)
+        public IActionResult Withdraw([FromBody] OperationModelDto model)
         {
 
-            var result = _bankingLogicService.Withdraw(this.GetCurrentUserId(), model.Amount);
+            var result = _bankingLogicService.Withdraw(this.GetCurrentUserId(), model);
 
             if (!result.IsSuccess)
             {
@@ -50,9 +50,9 @@ namespace BankingApp.API.Controllers
 
         [HttpPost]
         [Route("Transfer")]
-        public IActionResult Transfer([FromBody] TransferModelDto model)
+        public IActionResult Transfer([FromBody] OperationModelDto model)
         {
-            var result = _bankingLogicService.Transfer(this.GetCurrentUserId(), model.ReceiverUserId, model.Amount);
+            var result = _bankingLogicService.Transfer(this.GetCurrentUserId(), model);
 
             if (!result.IsSuccess)
             {
