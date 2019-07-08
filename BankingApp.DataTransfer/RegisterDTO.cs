@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BankingApp.Data.Entities;
+using BankingApp.Data.Helpers;
 
 namespace BankingApp.DataTransfer
 {
@@ -22,7 +23,12 @@ namespace BankingApp.DataTransfer
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
 
-        public User ConvertToUser() => new User(Login, Email, Password);
-
+        public User ConvertToUser()
+        {
+            return new User(
+                login: Login,
+                email: Email,
+                password: Encrypt.GetHash(Password));
+        }
     }
 }

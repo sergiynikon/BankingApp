@@ -1,4 +1,5 @@
-﻿using BankingApp.Data.Entities;
+﻿using System;
+using BankingApp.Data.Entities;
 
 namespace BankingApp.Data.Repositories.Interfaces
 {
@@ -6,5 +7,7 @@ namespace BankingApp.Data.Repositories.Interfaces
     {
         bool UserLoginExists(string login);
         bool UserEmailExists(string email);
+        User GetByLogin(string login);
+        bool VerifyPassword(Guid userId, string password);
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using BankingApp.Data;
 using BankingApp.Data.Entities;
+using BankingApp.Data.Helpers;
 using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Helpers;
@@ -24,7 +25,19 @@ namespace BankingApp.Services.Implementation
 
         public ResultDto GetIdentityToken(LoginDto identity)
         {
-            var claimsIdentity = GetClaimsIdentity(identity.Login, identity.Password);
+            var user = _unitOfWork.UserRepository.GetByLogin(identity.Login);
+
+            if (user == null)
+            {
+                return ResultDto.Error("Incorrect login!", identity);
+            }
+
+            if (_unitOfWork.UserRepository.VerifyPassword(user.Id, identity.Password) == false)
+            {
+                return ResultDto.Error("Incorrect password!", identity);
+            }
+
+            var claimsIdentity = GetClaimsIdentity(user.Id);
 
             if (claimsIdentity == null)
             {
@@ -50,11 +63,6 @@ namespace BankingApp.Services.Implementation
                 });
         }
 
-        public User GetUserIdentity(string login, string password)
-        {
-            return _unitOfWork.UserRepository.Find(u => u.Login == login && u.Password == password).SingleOrDefault();
-        }
-
         public ResultDto RegisterUser(RegisterDto identity)
         {
             if (_unitOfWork.UserRepository.UserLoginExists(identity.Login))
@@ -72,23 +80,14 @@ namespace BankingApp.Services.Implementation
             _unitOfWork.UserRepository.Add(user);
             _unitOfWork.Save();
 
-            return ResultDto.Success();
+            return ResultDto.Success(identity);
         }
 
-        private ClaimsIdentity GetClaimsIdentity(string login, string password)
+        private ClaimsIdentity GetClaimsIdentity(Guid userId)
         {
-            var user = _unitOfWork.UserRepository
-                .Find(u => u.Login == login && u.Password == password)
-                .SingleOrDefault();
-
-            if (user == null)
-            {
-                return null;
-            }
-
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString())
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userId.ToString())
             };
 
             ClaimsIdentity claimsIdentity =

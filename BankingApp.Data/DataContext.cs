@@ -22,12 +22,14 @@ namespace BankingApp.Data
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.SenderUser)
                 .WithMany(u => u.SentTransactions)
-                .HasForeignKey(t => t.SenderUserId);
+                .HasForeignKey(t => t.SenderUserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.ReceiverUser)
                 .WithMany(u => u.ReceivedTransactions)
-                .HasForeignKey(t => t.ReceiverUserId);
+                .HasForeignKey(t => t.ReceiverUserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
