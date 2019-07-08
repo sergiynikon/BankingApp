@@ -56,6 +56,10 @@ namespace BankingApp.Data.Migrations
 
                     b.Property<string>("Password");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
