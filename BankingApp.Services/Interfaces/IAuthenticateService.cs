@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using BankingApp.Data.Entities;
-using BankingApp.DataTransfer;
+﻿using BankingApp.DataTransfer;
 
 namespace BankingApp.Services.Interfaces
 {

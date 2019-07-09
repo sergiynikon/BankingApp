@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using BankingApp.Data.Entities;
 using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;

@@ -14,6 +14,15 @@ namespace BankingApp.Services.Implementation
         {
             _unitOfWork = unitOfWork;
         }
+        public ResultDto GetUserTransactions(Guid userId)
+        {
+            return ResultDto.Success(
+                new
+                {
+                    ReceivedTransactions = GetReceivedTransactions(userId),
+                    SentTransactions = GetSentTransactions(userId)
+                });
+        }
 
         private IEnumerable<TransactionViewDto> GetSentTransactions(Guid userId)
         {
@@ -41,14 +50,5 @@ namespace BankingApp.Services.Implementation
             return transactions;
         }
 
-        public ResultDto GetUserTransactions(Guid userId)
-        {
-            return ResultDto.Success(
-                new
-                {
-                    ReceivedTransactions = GetReceivedTransactions(userId),
-                    SentTransactions = GetSentTransactions(userId)
-                });
-        }
     }
 }

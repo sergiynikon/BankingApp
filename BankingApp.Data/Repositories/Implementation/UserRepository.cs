@@ -25,12 +25,12 @@ namespace BankingApp.Data.Repositories.Implementation
 
         public User GetByLogin(string login)
         {
-            return base.Find(u => u.Login == login).SingleOrDefault();
+            return Find(u => u.Login == login).SingleOrDefault();
         }
 
         public bool VerifyPassword(Guid userId, string password)
         {
-            var userFromDb = base.GetById(userId);
+            var userFromDb = GetById(userId);
             return userFromDb.Password == Encrypt.GetHash(password);
         }
     }

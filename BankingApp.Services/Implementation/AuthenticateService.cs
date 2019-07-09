@@ -13,6 +13,11 @@ namespace BankingApp.Services.Implementation
 {
     public class AuthenticateService : IAuthenticateService
     {
+        private static readonly string ErrorMessageIncorrectLogin = "Incorrect login!";
+        private static readonly string ErrorMessageIncorrectPassword = "Incorrect password!";
+        private static readonly string ErrorMessageCanNotGetIdentity = "Can not get identity";
+
+
         private readonly IUnitOfWork _unitOfWork;
 
         public AuthenticateService(DataContext context, IUnitOfWork unitOfWork)
@@ -26,19 +31,19 @@ namespace BankingApp.Services.Implementation
 
             if (user == null)
             {
-                return ResultDto.Error("Incorrect login!", identity);
+                return ResultDto.Error(ErrorMessageIncorrectLogin, identity);
             }
 
             if (_unitOfWork.UserRepository.VerifyPassword(user.Id, identity.Password) == false)
             {
-                return ResultDto.Error("Incorrect password!", identity);
+                return ResultDto.Error(ErrorMessageIncorrectPassword, identity);
             }
 
             var claimsIdentity = GetClaimsIdentity(user.Id);
 
             if (claimsIdentity == null)
             {
-                return ResultDto.Error("Can not get identity");
+                return ResultDto.Error(ErrorMessageCanNotGetIdentity);
             }
 
             var now = DateTime.UtcNow;
