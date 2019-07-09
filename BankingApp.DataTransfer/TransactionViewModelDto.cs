@@ -4,7 +4,7 @@ using BankingApp.DataTransfer.Helpers;
 
 namespace BankingApp.DataTransfer
 {
-    public class TransactionViewDto
+    public class TransactionViewModelDto
     {
         public DateTimeOffset TimeOfTransaction { get; set; }
 
@@ -13,8 +13,8 @@ namespace BankingApp.DataTransfer
         public string SenderUserEmail { get; set; }
         public string ReceiverUserEmail { get; set; }
 
-        public static TransactionViewDto ConvertFromTransaction(Transaction transaction) =>
-            new TransactionViewDto()
+        public static TransactionViewModelDto ConvertFromTransaction(Transaction transaction) =>
+            new TransactionViewModelDto()
             {
                 TransactionType = transaction.TransactionType.ToString(),
                 Amount = Casting.LongToDouble(transaction.Amount),

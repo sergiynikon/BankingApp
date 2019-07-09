@@ -3,14 +3,14 @@ using BankingApp.DataTransfer.Helpers;
 
 namespace BankingApp.DataTransfer
 {
-    public class UserViewDto
+    public class UserViewModelDto
     {
         public string Login { get; set; }
         public string Email { get; set; }
         public double Balance { get; set; }
 
-        public static UserViewDto ConvertFromUser(User user) =>
-            new UserViewDto()
+        public static UserViewModelDto ConvertFromUser(User user) =>
+            new UserViewModelDto()
             {
                 Login = user.Login,
                 Email = user.Email,
