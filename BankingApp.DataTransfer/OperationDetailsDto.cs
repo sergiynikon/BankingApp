@@ -11,7 +11,7 @@ namespace BankingApp.DataTransfer
             ReceiverUserId = receiverUserId;
         }
 
-        public double? Amount { get; }
+        public double Amount { get; }
         public Guid? SenderUserId { get; }
         public Guid? ReceiverUserId { get; }
     }
