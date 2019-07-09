@@ -20,6 +20,7 @@ namespace BankingApp.DataTransfer.Helpers.CustomAttributes
                     return true;
                 }
 
+                //it verifies whether number of tenths is not greater than 2
                 if (strNumber.Substring(strNumber.IndexOf('.') + 1).Length <= 2)
                 {
                     return true;
