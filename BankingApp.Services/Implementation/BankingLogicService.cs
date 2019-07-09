@@ -19,7 +19,6 @@ namespace BankingApp.Services.Implementation
     public class BankingLogicService : IBankingLogicService
     {
         private static int MaxAttempts = 10;
-        private static readonly string ErrorMessageAmountNotGreaterThanZero = "operation can not be performed. Amount must be greater, than 0!";
         private static readonly string ErrorMessageCanNotFindReceiverUser = "Can not find receiver user!";
         private static readonly string ErrorMessageReceiverUserIdShouldBeDifferentFromYour = "Receiver user id should be different from your!";
         private static readonly string ErrorMessageNotEnoughMoney = "Not enough money!";
@@ -48,15 +47,6 @@ namespace BankingApp.Services.Implementation
 
         private ResultDto ExecuteOperation(Guid senderUserId, OperationModelDto model, OperationType operationType)
         {
-            if (model.Amount <= 0)
-            {
-                return ResultDto.Error(ErrorMessageAmountNotGreaterThanZero,
-                    new OperationDetailsDto(
-                        amount: 0,
-                        senderUserId: senderUserId,
-                        receiverUserId: model.ReceiverUserId));
-            }
-
             long amountInCents = Casting.DoubleToLong(model.Amount);
             double amount = Casting.LongToDouble(amountInCents);
 
