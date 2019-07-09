@@ -31,6 +31,21 @@ namespace BankingApp.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
+        public ResultDto Deposit(Guid senderUserId, OperationModelDto model)
+        {
+            return ExecuteOperation(senderUserId, model, OperationType.Deposit);
+        }
+
+        public ResultDto Withdraw(Guid senderUserId, OperationModelDto model)
+        {
+            return ExecuteOperation(senderUserId, model, OperationType.Withdraw);
+        }
+
+        public ResultDto Transfer(Guid senderUserId, OperationModelDto model)
+        {
+            return ExecuteOperation(senderUserId, model, OperationType.Transfer);
+        }
+
         private ResultDto ExecuteOperation(Guid senderUserId, OperationModelDto model, OperationType operationType)
         {
             if (model.Amount <= 0)
@@ -137,21 +152,6 @@ namespace BankingApp.Services.Implementation
             }
 
             return ResultDto.Error();
-        }
-
-        public ResultDto Deposit(Guid senderUserId, OperationModelDto model)
-        {
-            return ExecuteOperation(senderUserId, model, OperationType.Deposit);
-        }
-
-        public ResultDto Withdraw(Guid senderUserId, OperationModelDto model)
-        {
-            return ExecuteOperation(senderUserId, model, OperationType.Withdraw);
-        }
-
-        public ResultDto Transfer(Guid senderUserId, OperationModelDto model)
-        {
-            return ExecuteOperation(senderUserId, model, OperationType.Transfer);
         }
     }
 }
