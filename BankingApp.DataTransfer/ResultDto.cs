@@ -24,7 +24,7 @@
                 result: result);
         }
 
-        public static ResultDto Error(string errorMessage, object result = null)
+        public static ResultDto Error(string errorMessage = DefaultErrorMessage, object result = null)
         {
             return new ResultDto(
                 isSuccess: false,
