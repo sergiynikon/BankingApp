@@ -26,13 +26,6 @@ namespace BankingApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userIdentity = _authenticateService.GetUserIdentity(identity.Login, identity.Password);
-
-            if (userIdentity == null)
-            {
-                return BadRequest(ResultDto.Error("Incorrect login or password!"));
-            }
-
             var token = _authenticateService.GetIdentityToken(identity);
 
             return Ok(token);
