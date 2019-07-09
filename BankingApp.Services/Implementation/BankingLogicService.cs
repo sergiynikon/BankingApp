@@ -1,25 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BankingApp.Data.Entities;
 using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankingApp.Services.Implementation
 {
+    public enum OperationType
+    {
+        Deposit,
+        Withdraw,
+        Transfer
+    }
+
     public class BankingLogicService : IBankingLogicService
     {
         private static readonly int CentValue = 100;
-        private static readonly string ErrorMessageDepositNonPositiveAmount = "Can not deposit non positive amount";
-        private static readonly string ErrorMessageWithdrawNonPositiveAmount = "Can not withdraw non positive amount";
-        private static readonly string ErrorMessageWithdrawNotEnoughMoney = "Can not withdraw. Not enough money";
-        private static readonly string ErrorMessageTransferWhenReceiverUserNotFound = "Can not find receiver";
-        private static readonly string ErrorMessageTransferNonPositiveAmount = "Can not transfer non positive amount";
-        private static readonly string ErrorMessageTransferNotEnoughMoney = "Can not transfer. Not enough money";
+        private static readonly string ErrorMessageAmountNotGreaterThanZero = "operation can not be performed. Amount must be greater, than 0!";
+        private static readonly string ErrorMessageReceiverUserShouldNotBeSet = "ReceiverUserId should not be set!";
+        private static readonly string ErrorMessageCanNotFindReceiverUser = "Can not find receiver user!";
+        private static readonly string ErrorMessageReceiverUserIdShouldBeDifferentFromYour = "Receiver user id should be different from your!";
+        private static readonly string ErrorMessageNotEnoughMoney = "Not enough money!";
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -38,159 +41,132 @@ namespace BankingApp.Services.Implementation
             return value / (double)CentValue;
         }
 
-        public ResultDto Deposit(Guid senderUserId, double amount)
+        private ResultDto ExecuteOperation(Guid senderUserId, OperationModelDto model, OperationType operationType)
         {
-            try
+            long longAmount = CastFromDouble(model.Amount);
+
+            if (longAmount <= 0)
             {
-                long longAmount = CastFromDouble(amount);
-
-                if (longAmount <= 0)
-                {
-                    return ResultDto.Error(ErrorMessageDepositNonPositiveAmount,
-                        new OperationDetailsDto(
-                            amount: 0,
-                            senderUserId: senderUserId));
-                }
-
-                var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
-
-                senderUser.Balance += longAmount;
-                _unitOfWork.TransactionRepository.Add(new Transaction(
-                    senderUserId: senderUserId,
-                    receiverUserId: null,
-                    amount: longAmount,
-                    transactionType: TransactionType.Deposit));
-                _unitOfWork.Save();
-
-                // when amount == 3.1482 for example, long amount will be equal to 314, resultAmount will be equal to 3.14
-                var resultAmount = CastFromLong(longAmount);
-
-                return ResultDto.Success(
+                return ResultDto.Error(ErrorMessageAmountNotGreaterThanZero,
                     new OperationDetailsDto(
-                        amount: amount,
+                        amount: 0,
                         senderUserId: senderUserId));
             }
-            catch (DBConcurrencyException)
+
+            var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
+            var receiverUser = _unitOfWork.UserRepository.GetById(model.ReceiverUserId ?? Guid.Empty);
+
+            //ReceiverUserId must be null when deposit or withdraw
+            if ((operationType == OperationType.Deposit 
+                 || operationType == OperationType.Withdraw) 
+                && model.ReceiverUserId != null)
             {
-                return Deposit(senderUserId, amount);
+                return ResultDto.Error(ErrorMessageReceiverUserShouldNotBeSet);
             }
-            catch (Exception e)
+
+            if (operationType == OperationType.Transfer)
             {
-                return ResultDto.Error(e.Message, e);
-            }
-        }
-
-        public ResultDto Withdraw(Guid senderUserId, double amount)
-        {
-            try
-            {
-                long longAmount = CastFromDouble(amount);
-
-                if (longAmount <= 0)
-                {
-                    return ResultDto.Error(ErrorMessageWithdrawNonPositiveAmount,
-                        new OperationDetailsDto(
-                            amount: 0,
-                            senderUserId: senderUserId));
-                }
-
-                var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
-
-                if (senderUser.Balance < longAmount)
-                {
-                    return ResultDto.Error(ErrorMessageWithdrawNotEnoughMoney,
-                        new OperationDetailsDto(
-                            amount: 0,
-                            senderUserId: senderUserId));
-                }
-
-                senderUser.Balance -= longAmount;
-                _unitOfWork.TransactionRepository.Add(new Transaction(
+                var operationDetails = new OperationDetailsDto(
+                    amount: 0,
                     senderUserId: senderUserId,
-                    receiverUserId: null,
-                    amount: longAmount,
-                    transactionType: TransactionType.Withdraw));
-                _unitOfWork.Save();
-
-                var resultAmount = CastFromLong(longAmount);
-
-                return ResultDto.Success(
-                    new OperationDetailsDto(
-                        amount: amount,
-                        senderUserId: senderUserId));
-            }
-            catch (DBConcurrencyException)
-            {
-                return Withdraw(senderUserId, amount);
-            }
-            catch (Exception e)
-            {
-                return ResultDto.Error(e.Message, e);
-            }
-        }
-
-        public ResultDto Transfer(Guid senderUserId, Guid receiverUserId, double amount)
-        {
-            try
-            {
-                long longAmount = CastFromDouble(amount);
-
-                var receiverUser = _unitOfWork.UserRepository.GetById(receiverUserId);
+                    receiverUserId: model.ReceiverUserId);
 
                 if (receiverUser == null)
                 {
-                    return ResultDto.Error(ErrorMessageTransferWhenReceiverUserNotFound,
-                        new OperationDetailsDto(
-                            amount: 0,
-                            senderUserId: senderUserId,
-                            receiverUserId: receiverUserId));
+                    return ResultDto.Error(ErrorMessageCanNotFindReceiverUser,
+                        operationDetails);
                 }
 
-                if (longAmount <= 0)
+                if (model.ReceiverUserId == senderUserId)
                 {
-                    return ResultDto.Error(ErrorMessageTransferNonPositiveAmount,
-                        new OperationDetailsDto(
-                            amount: 0,
-                            senderUserId: senderUserId,
-                            receiverUserId: receiverUserId));
+                    return ResultDto.Error(ErrorMessageReceiverUserIdShouldBeDifferentFromYour,
+                        operationDetails);
                 }
+            }
 
-                var senderUser = _unitOfWork.UserRepository.GetById(senderUserId);
+            if ((operationType == OperationType.Withdraw 
+                 || operationType == OperationType.Transfer) 
+                && senderUser.Balance < longAmount)
+            {
+                return ResultDto.Error(ErrorMessageNotEnoughMoney,
+                    new OperationDetailsDto(
+                        amount: 0,
+                        senderUserId: senderUserId,
+                        receiverUserId: model.ReceiverUserId));
+            }
+            switch (operationType)
+            {
+                case OperationType.Deposit:
+                    senderUser.Balance += longAmount;
 
-                if (senderUser.Balance < longAmount)
-                {
-                    return ResultDto.Error(ErrorMessageTransferNotEnoughMoney,
-                        new OperationDetailsDto(
-                            amount: 0,
-                            senderUserId: senderUserId,
-                            receiverUserId: receiverUserId));
-                }
+                    _unitOfWork.TransactionRepository.Add(new Transaction(
+                        senderUserId: senderUserId,
+                        receiverUserId: null,
+                        amount: longAmount,
+                        transactionType: TransactionType.Deposit));
 
-                receiverUser.Balance += longAmount;
-                senderUser.Balance -= longAmount;
-                _unitOfWork.TransactionRepository.Add(new Transaction(
-                    senderUserId: senderUserId,
-                    receiverUserId: receiverUserId,
-                    amount: longAmount,
-                    transactionType: TransactionType.Transfer));
+                    break;
+
+                case OperationType.Withdraw:
+                    senderUser.Balance -= longAmount;
+
+                    _unitOfWork.TransactionRepository.Add(new Transaction(
+                        senderUserId: senderUserId,
+                        receiverUserId: null,
+                        amount: longAmount,
+                        transactionType: TransactionType.Withdraw));
+
+                    break;
+
+                case OperationType.Transfer:
+                    senderUser.Balance -= longAmount;
+                    receiverUser.Balance += longAmount;
+
+                    _unitOfWork.TransactionRepository.Add(new Transaction(
+                        senderUserId: senderUserId,
+                        receiverUserId: model.ReceiverUserId,
+                        amount: longAmount,
+                        transactionType: TransactionType.Transfer));
+
+                    break;
+            }
+
+            try
+            {
                 _unitOfWork.Save();
 
                 var resultAmount = CastFromLong(longAmount);
 
                 return ResultDto.Success(
                     new OperationDetailsDto(
-                        amount: amount,
+                        amount: resultAmount,
                         senderUserId: senderUserId,
-                        receiverUserId: receiverUserId));
+                        receiverUserId: model.ReceiverUserId));
             }
-            catch (DBConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
-                return Transfer(senderUserId, receiverUserId, amount);
+                e.Entries.Single().Reload();
+                return ExecuteOperation(senderUserId, model, operationType);
             }
             catch (Exception e)
             {
                 return ResultDto.Error(e.Message, e);
             }
+        }
+
+        public ResultDto Deposit(Guid senderUserId, OperationModelDto model)
+        {
+            return ExecuteOperation(senderUserId, model, OperationType.Deposit);
+        }
+
+        public ResultDto Withdraw(Guid senderUserId, OperationModelDto model)
+        {
+            return ExecuteOperation(senderUserId, model, OperationType.Withdraw);
+        }
+
+        public ResultDto Transfer(Guid senderUserId, OperationModelDto model)
+        {
+            return ExecuteOperation(senderUserId, model, OperationType.Transfer);
         }
     }
 }
