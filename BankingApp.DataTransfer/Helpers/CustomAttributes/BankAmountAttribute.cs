@@ -13,7 +13,14 @@ namespace BankingApp.DataTransfer.Helpers.CustomAttributes
         {
             if (value is double number)
             {
-                if (number.ToString(CultureInfo.InvariantCulture) == string.Format($"{number:0.00}"))
+                var strNumber = number.ToString(CultureInfo.InvariantCulture);
+
+                if (!strNumber.Contains("."))
+                {
+                    return true;
+                }
+
+                if (strNumber.Substring(strNumber.IndexOf('.') + 1).Length <= 2)
                 {
                     return true;
                 }
