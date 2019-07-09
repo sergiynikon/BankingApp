@@ -1,6 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using BankingApp.Data.Entities;
+﻿using BankingApp.Data.Entities;
+using BankingApp.DataTransfer.Helpers;
 
 namespace BankingApp.DataTransfer
 {
@@ -15,7 +14,7 @@ namespace BankingApp.DataTransfer
             {
                 Login = user.Login,
                 Email = user.Email,
-                Balance = user.Balance
+                Balance = Casting.LongToDouble(user.Balance)
             };
     }
 }

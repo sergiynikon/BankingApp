@@ -1,11 +1,13 @@
 ﻿using System;
 using BankingApp.Data.Entities;
+using BankingApp.DataTransfer.Helpers;
 
 namespace BankingApp.DataTransfer
 {
     public class TransactionViewDto
     {
         public DateTimeOffset TimeOfTransaction { get; set; }
+
         public double Amount { get; set; }
         public string TransactionType { get; set; }
         public string SenderUserEmail { get; set; }
@@ -15,7 +17,7 @@ namespace BankingApp.DataTransfer
             new TransactionViewDto()
             {
                 TransactionType = transaction.TransactionType.ToString(),
-                Amount = transaction.Amount,
+                Amount = Casting.LongToDouble(transaction.Amount),
                 TimeOfTransaction = transaction.TimeOfTransaction,
                 SenderUserEmail = transaction.SenderUser?.Email,
                 ReceiverUserEmail = transaction.ReceiverUser?.Email

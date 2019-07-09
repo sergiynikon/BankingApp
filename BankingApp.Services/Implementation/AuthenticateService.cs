@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using BankingApp.Data;
-using BankingApp.Data.Entities;
-using BankingApp.Data.Helpers;
 using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Helpers;
