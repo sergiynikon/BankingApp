@@ -12,10 +12,11 @@ namespace BankingApp.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Login = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(nullable: false),
-                    Password = table.Column<string>(nullable: false),
-                    Balance = table.Column<long>(nullable: false)
+                    Login = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true),
+                    Balance = table.Column<long>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {

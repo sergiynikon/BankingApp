@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankingApp.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190704082845_Initial")]
+    [Migration("20190709105916_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,6 +57,10 @@ namespace BankingApp.Data.Migrations
                     b.Property<string>("Login");
 
                     b.Property<string>("Password");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.HasKey("Id");
 
