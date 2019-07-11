@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using BankingApp.API.Controllers;
-using BankingApp.Data.Entities;
+using BankingApp.API.Extensions;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
@@ -12,23 +15,22 @@ namespace BankingApp.API.Tests
 {
     public class UsersControllerTests
     {
-        private readonly UsersController _controller;
-
+        private readonly Mock<IUserService> _userServiceMock = new Mock<IUserService>();
         public UsersControllerTests()
         {
-            var mock = new Mock<IUserService>();
-            mock.Setup(service => service.GetAllUsers()).Returns(GetTestUserViewModelsDto());
-            
-            _controller = new UsersController(mock.Object);
-
+            _userServiceMock.Setup(service => service.GetAllUsers()).Returns(GetTestUsers());
+            _userServiceMock.Setup(service => service.GetUser(GetTestUserId())).Returns(GetTestUsers().First());
         }
 
         #region Tests
         [Fact]
         public void GetAllUsers_ReturnsOkObjectResult()
         {
+            //Arrange
+            var controller = GetUserController();
+
             //Act
-            var result = _controller.GetAllUsers();
+            var result = controller.GetAllUsers();
 
             //Assert
             Assert.IsType<OkObjectResult>(result);
@@ -37,59 +39,88 @@ namespace BankingApp.API.Tests
         [Fact]
         public void GetAllUsers_ReturnsCorrectNumberOfUsers()
         {
+            //Arrange
+            var controller = GetUserController();
+
             //Act
-            var okResult = _controller.GetAllUsers() as OkObjectResult;
-            var users = okResult.Value as List<UserViewModelDto>;
+            var okResult = controller.GetAllUsers() as OkObjectResult;
+            var users = okResult?.Value as List<UserViewModelDto>;
 
             //Assert
             Assert.NotNull(okResult);
 
             Assert.NotNull(users);
 
-            Assert.Equal(2, users.Count);
+            Assert.Equal(3, users.Count);
+        }
+
+        [Fact]
+        public void GetCurrentUser_ReturnsUser()
+        {
+            //Arrange
+            var controller = GetUserController();
+
+            //Act
+            var result = controller.GetCurrentUser();
+            var okResult = result as OkObjectResult;
+            var user = okResult?.Value as UserViewModelDto;
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotNull(okResult);
+            Assert.NotNull(user);
+            Assert.Equal("testUser1", user.Login);
         }
         #endregion
 
         #region TestData
-        private IEnumerable<UserViewModelDto> GetTestUserViewModelsDto()
+        private IEnumerable<UserViewModelDto> GetTestUsers()
         {
-            var testUserViewModelsDto = new List<UserViewModelDto>();
-            foreach (var testUser in GetTestUsers())
+            var testUsers = new List<UserViewModelDto>
             {
-                testUserViewModelsDto.Add(UserViewModelDto.ConvertFromUser(testUser));
-            }
-
-            return testUserViewModelsDto;
-        }
-
-        private IEnumerable<User> GetTestUsers()
-        {
-            var testUsers = new List<User>
-            {
-                new User
+                new UserViewModelDto
                 {
-                    Id = new Guid("a0b63840-450d-4181-ab3a-910c75497ccc"),
-                    Login = "admin",
-                    Email = "admin@gmail.com",
-                    Password = "abc123",
-                    Balance = 10000,
-                    ReceivedTransactions = new List<Transaction>(),
-                    SentTransactions = new List<Transaction>(),
-                    RowVersion = new byte[0]
+                    Balance = 100000,
+                    Email = "testUser1@email.com",
+                    Login = "testUser1"
                 },
-                new User
+                new UserViewModelDto
                 {
-                    Id = new Guid("933c9063-fe3a-4667-a0a6-a05842d21370"),
-                    Login = "user1",
-                    Email = "user1@gmail.com",
-                    Password = "abc123",
-                    Balance = 100,
-                    ReceivedTransactions = new List<Transaction>(),
-                    SentTransactions = new List<Transaction>(),
-                    RowVersion = new byte[0]
+                    Balance = 200000,
+                    Email = "testUser2@email.com",
+                    Login = "testUser2"
+                },
+                new UserViewModelDto
+                {
+                    Balance = 300000,
+                    Email = "testUser3@email.com",
+                    Login = "testUser3"
                 }
             };
+
             return testUsers;
+        }
+
+        private Guid GetTestUserId()
+        {
+            return Guid.Parse("6410e9f4-0b44-4407-badc-cc5461a2da27");
+        }
+
+        private UsersController GetUserController()
+        {
+            var controller = new UsersController(_userServiceMock.Object);
+
+            var userInClaimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, GetTestUserId().ToString())
+            }));
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext { User = userInClaimsPrincipal }
+            };
+
+            return controller;
         }
         #endregion
     }
