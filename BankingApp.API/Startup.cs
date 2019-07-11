@@ -23,7 +23,6 @@ namespace BankingApp.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -50,13 +49,13 @@ namespace BankingApp.API
                         ValidateLifetime = true
                     };
                 });
+
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IAuthenticateService, AuthenticateService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITransactionsService, TransactionsService>();
             services.AddScoped<IBankingLogicService, BankingLogicService>();
-
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -78,7 +77,6 @@ namespace BankingApp.API
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
             });
-
         }
     }
 }

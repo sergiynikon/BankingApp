@@ -31,6 +31,5 @@ namespace BankingApp.Services.Helpers
         {
             return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Key));
         }
-
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
@@ -16,19 +15,19 @@ namespace BankingApp.Services.Implementation
             _unitOfWork = unitOfWork;
         }
 
-        public UserViewDto GetUser(Guid id)
+        public UserViewModelDto GetUser(Guid id)
         {
-            return UserViewDto.ConvertFromUser(_unitOfWork.UserRepository.GetById(id));
+            return UserViewModelDto.ConvertFromUser(_unitOfWork.UserRepository.GetById(id));
         }
 
-        public IEnumerable<UserViewDto> GetAllUsers()
+        public IEnumerable<UserViewModelDto> GetAllUsers()
         {
-            var users = new List<UserViewDto>();
+            var users = new List<UserViewModelDto>();
             var usersFromDatabase = _unitOfWork.UserRepository.GetAll();
 
             foreach (var user in usersFromDatabase)
             {
-                users.Add(UserViewDto.ConvertFromUser(user));
+                users.Add(UserViewModelDto.ConvertFromUser(user));
             }
 
             return users;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using BankingApp.Data.Entities;
 using BankingApp.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;

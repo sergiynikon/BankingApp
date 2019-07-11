@@ -12,7 +12,7 @@ namespace BankingApp.DataTransfer
         public string Login { get; set; }
 
         [Required]
-        [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]

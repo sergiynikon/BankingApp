@@ -15,7 +15,8 @@ namespace BankingApp.Data.Migrations
                     Login = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
                     Password = table.Column<string>(nullable: false),
-                    Balance = table.Column<long>(nullable: false)
+                    Balance = table.Column<long>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {

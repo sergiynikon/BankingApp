@@ -1,4 +1,5 @@
-﻿using BankingApp.API.Extensions;
+﻿using System;
+using BankingApp.API.Extensions;
 using BankingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +19,18 @@ namespace BankingApp.API.Controllers
         }
 
         [HttpGet]
+        [Route("Current")]
         public IActionResult GetUserTransactions()
         {
             return Ok(_transactionsService.GetUserTransactions(this.GetCurrentUserId()));
+        }
+
+        [HttpGet]
+        [Route("{userId}")]
+        //TODO: add authorization by role [Authorize(Roles = "admin")]
+        public IActionResult GetUserTransactions(Guid userId)
+        {
+            return Ok(_transactionsService.GetUserTransactions(userId));
         }
     }
 }

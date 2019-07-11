@@ -14,33 +14,6 @@ namespace BankingApp.Services.Implementation
         {
             _unitOfWork = unitOfWork;
         }
-
-        private IEnumerable<TransactionViewDto> GetSentTransactions(Guid userId)
-        {
-            var transactions = new List<TransactionViewDto>();
-            var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetSentTransactionsByUserId(userId);
-
-            foreach (var transaction in transactionsFromDatabase)
-            {
-                transactions.Add(TransactionViewDto.ConvertFromTransaction(transaction));
-            }
-
-            return transactions;
-        }
-
-        private IEnumerable<TransactionViewDto> GetReceivedTransactions(Guid userId)
-        {
-            var transactions = new List<TransactionViewDto>();
-            var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetReceivedTransactionsByUserId(userId);
-
-            foreach (var transaction in transactionsFromDatabase)
-            {
-                transactions.Add(TransactionViewDto.ConvertFromTransaction(transaction));
-            }
-
-            return transactions;
-        }
-
         public ResultDto GetUserTransactions(Guid userId)
         {
             return ResultDto.Success(
@@ -50,5 +23,32 @@ namespace BankingApp.Services.Implementation
                     SentTransactions = GetSentTransactions(userId)
                 });
         }
+
+        private IEnumerable<TransactionViewModelDto> GetSentTransactions(Guid userId)
+        {
+            var transactions = new List<TransactionViewModelDto>();
+            var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetSentTransactionsByUserId(userId);
+
+            foreach (var transaction in transactionsFromDatabase)
+            {
+                transactions.Add(TransactionViewModelDto.ConvertFromTransaction(transaction));
+            }
+
+            return transactions;
+        }
+
+        private IEnumerable<TransactionViewModelDto> GetReceivedTransactions(Guid userId)
+        {
+            var transactions = new List<TransactionViewModelDto>();
+            var transactionsFromDatabase = _unitOfWork.TransactionRepository.GetReceivedTransactionsByUserId(userId);
+
+            foreach (var transaction in transactionsFromDatabase)
+            {
+                transactions.Add(TransactionViewModelDto.ConvertFromTransaction(transaction));
+            }
+
+            return transactions;
+        }
+
     }
 }

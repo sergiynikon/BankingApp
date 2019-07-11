@@ -22,7 +22,6 @@ namespace BankingApp.API.Controllers
         [Route("Deposit")]
         public IActionResult Deposit([FromBody] OperationModelDto model)
         {
-
             var result = _bankingLogicService.Deposit(this.GetCurrentUserId(), model);
 
             if (!result.IsSuccess)
@@ -37,7 +36,6 @@ namespace BankingApp.API.Controllers
         [Route("Withdraw")]
         public IActionResult Withdraw([FromBody] OperationModelDto model)
         {
-
             var result = _bankingLogicService.Withdraw(this.GetCurrentUserId(), model);
 
             if (!result.IsSuccess)
