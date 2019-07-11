@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using BankingApp.API.Controllers;
-using BankingApp.API.Extensions;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -52,6 +51,19 @@ namespace BankingApp.API.Tests
             Assert.NotNull(users);
 
             Assert.Equal(3, users.Count);
+        }
+
+        [Fact]
+        public void GetCurrentUser_ReturnsOkObjectResult()
+        {
+            //Arrange
+            var controller = GetUserController();
+
+            //Act
+            var result = controller.GetCurrentUser();
+
+            //Assert
+            Assert.IsType<OkObjectResult>(result);
         }
 
         [Fact]
