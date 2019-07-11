@@ -7,10 +7,6 @@ namespace BankingApp.Data.Entities
 {
     public class User
     {
-        public User()
-        {
-        }
-
         public User(string login, string email, string password)
         {
             Login = login;
