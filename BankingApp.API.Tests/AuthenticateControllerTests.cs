@@ -108,19 +108,6 @@ namespace BankingApp.API.Tests
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);
         }
-
-        [Fact]
-        public void Login_WhenNotAuthorized_NotReturnUnAuthorized()
-        {
-            //Arrange
-            var controller = GetController();
-
-            //Act
-            var result = controller.Login(_validLoginModel);
-
-            //Assert
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
         #endregion
 
         #region RegisterTests
