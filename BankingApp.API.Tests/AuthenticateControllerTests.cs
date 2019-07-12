@@ -11,8 +11,6 @@ namespace BankingApp.API.Tests
 {
     public class AuthenticateControllerTests
     {
-        private static readonly string _token = "token";
-
         private readonly Mock<IAuthenticateService> _authenticateServiceMock = new Mock<IAuthenticateService>();
 
         private readonly LoginDto _validLoginModel = new LoginDto
@@ -35,11 +33,7 @@ namespace BankingApp.API.Tests
             Login = "", Email = "", Password = "", ConfirmPassword = ""
         };
 
-        private readonly ResultDto _validResultDto = ResultDto.Success(
-            new
-            {
-                encodedJwt = _token
-            });
+        private readonly ResultDto _validResultDto = ResultDto.Success();
 
         private readonly ResultDto _invalidResultDto = ResultDto.Error();
 
@@ -94,6 +88,7 @@ namespace BankingApp.API.Tests
         {
             //Arrange
             var controller = GetController();
+            controller.ModelState.Clear();
 
             //Act
             var result = controller.Login(_validLoginModel);
@@ -106,7 +101,9 @@ namespace BankingApp.API.Tests
         public void Login_WhenModelStateIsNotValid_ReturnsBadRequest()
         {
             //Arrange
-            var controller = GetController(addModelError: true);
+            var controller = GetController();
+            controller.ModelState.Clear();
+            controller.ModelState.AddModelError("login", "test error");
 
             //Act
             var result = controller.Login(_validLoginModel);
@@ -116,18 +113,16 @@ namespace BankingApp.API.Tests
         }
 
         [Fact]
-        public void Login_WhenValidLoginDto_ReturnsTokenInResultDto()
+        public void Login_WhenNotAuthorized_NotReturnUnAuthorized()
         {
             //Arrange
             var controller = GetController();
 
             //Act
             var result = controller.Login(_validLoginModel);
-            var okResult = result as OkObjectResult;
-            var resultDto = okResult?.Value;
 
             //Assert
-            Assert.Equal(_validResultDto, resultDto);
+            Assert.IsType<BadRequestObjectResult>(result);
         }
         #endregion
 
@@ -137,6 +132,7 @@ namespace BankingApp.API.Tests
         {
             //Arrange
             var controller = GetController();
+            controller.ModelState.Clear();
 
             //Act
             var result = controller.Register(_validRegisterDto);
@@ -149,7 +145,9 @@ namespace BankingApp.API.Tests
         public void Register_WhenModelStateIsNotValid_ReturnsBadRequest()
         {
             //Arrange
-            var controller = GetController(addModelError: true);
+            var controller = GetController();
+            controller.ModelState.Clear();
+            controller.ModelState.AddModelError("login", "test error");
 
             //Act
             var result = controller.Register(_validRegisterDto);
@@ -163,6 +161,7 @@ namespace BankingApp.API.Tests
         {
             //Arrange
             var controller = GetController();
+            controller.ModelState.Clear();
 
             //Act
             var result = controller.Register(_validRegisterDto);
@@ -176,6 +175,7 @@ namespace BankingApp.API.Tests
         {
             //Arrange
             var controller = GetController();
+            controller.ModelState.Clear();
 
             //Act
             var result = controller.Register(_invalidRegisterDto);
@@ -186,16 +186,9 @@ namespace BankingApp.API.Tests
         #endregion
 
         #region TestData
-        private AuthenticateController GetController(bool addModelError = false)
+        private AuthenticateController GetController()
         {
-            var controller = new AuthenticateController(_authenticateServiceMock.Object);
-
-            if (addModelError)
-            {
-                controller.ModelState.AddModelError("someKey", "someError");
-            }
-
-            return controller;
+            return new AuthenticateController(_authenticateServiceMock.Object);
         }
         #endregion
     }
