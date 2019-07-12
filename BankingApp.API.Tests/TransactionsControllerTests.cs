@@ -35,7 +35,7 @@ namespace BankingApp.API.Tests
                 .Returns(_invalidResultDto);
         }
 
-        #region GetUserTransactionsWithNoParametersTest
+        #region GetUserTransactionsWithNoParametersTests
         [Fact]
         public void GetUserTransactionsWithNoParameters_ReturnsOk()
         {
@@ -48,7 +48,9 @@ namespace BankingApp.API.Tests
             //Assert
             Assert.IsType<OkObjectResult>(result);
         }
+        #endregion
 
+        #region GetUserTransactionsTests
         [Fact]
         public void GetUserTransactions_WithValidUserId_ReturnsOk()
         {
