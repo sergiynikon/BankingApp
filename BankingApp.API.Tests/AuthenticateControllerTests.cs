@@ -11,6 +11,8 @@ namespace BankingApp.API.Tests
 {
     public class AuthenticateControllerTests
     {
+        private static readonly string _token = "token";
+
         private readonly Mock<IAuthenticateService> _authenticateServiceMock = new Mock<IAuthenticateService>();
 
         private readonly LoginDto _validLoginModel = new LoginDto
@@ -33,7 +35,11 @@ namespace BankingApp.API.Tests
             Login = "", Email = "", Password = "", ConfirmPassword = ""
         };
 
-        private readonly ResultDto _validResultDto = ResultDto.Success();
+        private readonly ResultDto _validResultDto = ResultDto.Success(
+            new
+            {
+                encodedJwt = _token
+            });
 
         private readonly ResultDto _invalidResultDto = ResultDto.Error();
 
@@ -107,6 +113,21 @@ namespace BankingApp.API.Tests
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public void Login_WhenValidLoginDto_ReturnsTokenInResultDto()
+        {
+            //Arrange
+            var controller = GetController();
+
+            //Act
+            var result = controller.Login(_validLoginModel);
+            var okResult = result as OkObjectResult;
+            var resultDto = okResult?.Value;
+
+            //Assert
+            Assert.Equal(_validResultDto, resultDto);
         }
         #endregion
 
