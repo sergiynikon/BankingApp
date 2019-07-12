@@ -19,6 +19,7 @@ namespace BankingApp.API.Tests
 
         private readonly ResultDto _validResultDto = ResultDto.Success();
         private readonly ResultDto _invalidResultDto = ResultDto.Error();
+
         public TransactionsControllerTests()
         {
             _transactionsServiceMock.Setup(service =>
