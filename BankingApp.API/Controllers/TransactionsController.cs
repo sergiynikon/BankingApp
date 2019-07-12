@@ -34,7 +34,7 @@ namespace BankingApp.API.Controllers
             
             if (!result.IsSuccess)
             {
-                return BadRequest(result);
+                return NotFound(result);
             }
 
             return Ok(result);
