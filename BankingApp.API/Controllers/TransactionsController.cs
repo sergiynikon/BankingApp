@@ -30,7 +30,14 @@ namespace BankingApp.API.Controllers
         //TODO: add authorization by role [Authorize(Roles = "admin")]
         public IActionResult GetUserTransactions(Guid userId)
         {
-            return Ok(_transactionsService.GetUserTransactions(userId));
+            var result = _transactionsService.GetUserTransactions(userId);
+            
+            if (!result.IsSuccess)
+            {
+                return NotFound(result);
+            }
+
+            return Ok(result);
         }
     }
 }

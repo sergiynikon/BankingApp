@@ -26,9 +26,14 @@ namespace BankingApp.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var token = _authenticateService.GetIdentityToken(identity);
+            var result = _authenticateService.GetIdentityToken(identity);
 
-            return Ok(token);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]
