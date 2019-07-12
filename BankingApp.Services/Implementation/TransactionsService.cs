@@ -8,6 +8,8 @@ namespace BankingApp.Services.Implementation
 {
     public class TransactionsService : ITransactionsService
     {
+        private readonly string ErrorMessageUserNotFound = "User not found";
+
         private readonly IUnitOfWork _unitOfWork;
 
         public TransactionsService(IUnitOfWork unitOfWork)
@@ -16,6 +18,11 @@ namespace BankingApp.Services.Implementation
         }
         public ResultDto GetUserTransactions(Guid userId)
         {
+            if (_unitOfWork.UserRepository.GetById(userId) is null)
+            {
+                return ResultDto.Error(ErrorMessageUserNotFound);
+            }
+
             return ResultDto.Success(
                 new
                 {
