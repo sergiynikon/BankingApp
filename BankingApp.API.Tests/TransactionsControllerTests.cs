@@ -71,7 +71,7 @@ namespace BankingApp.API.Tests
             var controller = GetUserController();
 
             //Act
-            var result = controller.GetUserTransactions();
+            var result = controller.GetUserTransactions(_invalidUserId);
 
             //Assert
             Assert.IsType<NotFoundObjectResult>(result);
