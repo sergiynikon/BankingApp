@@ -40,7 +40,7 @@ namespace BankingApp.API.Tests
         public void GetUserTransactionsWithNoParameters_ReturnsOk()
         {
             //Arrange
-            var controller = GetUserController();
+            var controller = GetTransactionsController();
 
             //Act
             var result = controller.GetUserTransactions();
@@ -55,7 +55,7 @@ namespace BankingApp.API.Tests
         public void GetUserTransactions_WithValidUserId_ReturnsOk()
         {
             //Arrange
-            var controller = GetUserController();
+            var controller = GetTransactionsController();
 
             //Act
             var result = controller.GetUserTransactions(_validUserId);
@@ -68,7 +68,7 @@ namespace BankingApp.API.Tests
         public void GetUserTransactions_WithInvalidUserId_ReturnsNotFound()
         {
             //Arrange
-            var controller = GetUserController();
+            var controller = GetTransactionsController();
 
             //Act
             var result = controller.GetUserTransactions(_invalidUserId);
@@ -84,7 +84,7 @@ namespace BankingApp.API.Tests
             return Guid.Parse("6410e9f4-0b44-4407-badc-cc5461a2da27");
         }
 
-        private TransactionsController GetUserController()
+        private TransactionsController GetTransactionsController()
         {
             var controller = new TransactionsController(_transactionsServiceMock.Object);
 
