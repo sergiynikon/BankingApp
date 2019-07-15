@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using BankingApp.DataTransfer.Helpers;
 using BankingApp.DataTransfer.Helpers.CustomAttributes;
 
 namespace BankingApp.DataTransfer
@@ -10,7 +11,7 @@ namespace BankingApp.DataTransfer
 
         [Required]
         [BankAmount]
-        [Range(0.01, double.MaxValue)] //from 1 cent to double.MaxValue
+        [Range(Constants.MaxOperationAmount, Constants.MaxOperationAmount)]
         public double Amount { get; set; }
     }
 }
