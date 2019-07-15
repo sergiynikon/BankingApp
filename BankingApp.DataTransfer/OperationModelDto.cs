@@ -11,7 +11,7 @@ namespace BankingApp.DataTransfer
 
         [Required]
         [BankAmount]
-        [Range(Constants.MaxOperationAmount, Constants.MaxOperationAmount)]
+        [Range(Constants.MinOperationAmount, Constants.MaxOperationAmount)]
         public double Amount { get; set; }
     }
 }
