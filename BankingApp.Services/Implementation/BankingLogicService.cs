@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using BankingApp.Data.Entities;
 using BankingApp.Data.UnitOfWork;
@@ -47,6 +49,13 @@ namespace BankingApp.Services.Implementation
 
         private ResultDto ExecuteOperation(Guid senderUserId, OperationModelDto model, OperationType operationType)
         {
+            var results = new List<ValidationResult>();
+            var context = new ValidationContext(model);
+            if (!Validator.TryValidateObject(model, context, results, validateAllProperties: true))
+            {
+                return ResultDto.Error("Model is invalid", model);
+            }
+
             long amountInCents = Casting.DoubleToLong(model.Amount);
             double amount = Casting.LongToDouble(amountInCents);
 
