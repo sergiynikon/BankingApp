@@ -36,8 +36,8 @@ namespace BankingApp.Services.Tests
 
         [Theory]
         [InlineData(100)]
-        [InlineData(double.MaxValue)]
-        [InlineData(0)]
+        [InlineData(10000000000)]
+        [InlineData(0.01)]
         public void Deposit_WithValidOperationModelDto_ReturnsSuccessResultDto(double amount)
         {
             //Arrange
