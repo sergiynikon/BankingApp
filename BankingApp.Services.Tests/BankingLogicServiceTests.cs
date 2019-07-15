@@ -2,6 +2,7 @@
 using BankingApp.Data.Entities;
 using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
+using BankingApp.DataTransfer.Helpers;
 using BankingApp.Services.Implementation;
 using BankingApp.Services.Interfaces;
 using Moq;
@@ -34,7 +35,7 @@ namespace BankingApp.Services.Tests
 
         [Theory]
         [InlineData(100)]
-        [InlineData(10000000000)]
+        [InlineData(Constants.MaxOperationAmount)]
         [InlineData(0.01)]
         public void Deposit_WithValidOperationModelDto_ReturnsSuccessResultDto(double amount)
         {
@@ -67,6 +68,28 @@ namespace BankingApp.Services.Tests
 
             //Assert
             Assert.False(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(Constants.MinOperationAmount)]
+        [InlineData(Constants.MaxOperationAmount)]
+        public void Deposit_WithValidOperationModelDto_ReturnsCorrectResultDto(double amount)
+        {
+            //Arrange
+            var service = GetBankingLogicService();
+
+            //Act
+            var result = service.Deposit(_testSenderUserId, new OperationModelDto
+            {
+                Amount = amount
+            });
+
+            double resultAmount = (result.Result as OperationDetailsDto)?.Amount ?? 0;
+
+            //Assert
+            Assert.Equal(amount, resultAmount);
         }
 
         #endregion
