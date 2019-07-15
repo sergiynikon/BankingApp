@@ -1,10 +1,9 @@
-﻿namespace BankingApp.DataTransfer
+﻿using BankingApp.DataTransfer.Helpers;
+
+namespace BankingApp.DataTransfer
 {
     public class ResultDto
     {
-        private const string DefaultErrorMessage = "Something went wrong";
-        private static readonly string SuccessMessage = "Success";
-
         private ResultDto(bool isSuccess, string message, object result = null)
         {
             IsSuccess = isSuccess;
@@ -20,11 +19,11 @@
         {
             return new ResultDto(
                 isSuccess: true,
-                message: SuccessMessage,
+                message: Constants.SuccessMessage,
                 result: result);
         }
 
-        public static ResultDto Error(string errorMessage = DefaultErrorMessage, object result = null)
+        public static ResultDto Error(string errorMessage = Constants.DefaultErrorMessage, object result = null)
         {
             return new ResultDto(
                 isSuccess: false,
