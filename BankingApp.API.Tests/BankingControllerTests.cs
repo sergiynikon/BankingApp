@@ -14,9 +14,11 @@ namespace BankingApp.API.Tests
     {
         private readonly Mock<IBankingLogicService> _bankingLogicServiceMock = new Mock<IBankingLogicService>();
 
+        private readonly Guid _testUserGuid = Guid.NewGuid();
+
         private readonly OperationModelDto _validModel = new OperationModelDto
         {
-            ReceiverUserId = Guid.Parse("407e397c-7dc8-4c39-8b50-0e6623f4e38e"),
+            ReceiverUserId = Guid.NewGuid(),
             Amount = 1000
         };
 
@@ -32,7 +34,7 @@ namespace BankingApp.API.Tests
         public BankingControllerTests()
         {
             _bankingLogicServiceMock.Setup(service => 
-                    service.Deposit(It.Is<Guid>(id => id == GetTestUserId()), It.IsAny<OperationModelDto>()))
+                    service.Deposit(It.Is<Guid>(id => id == _testUserGuid), It.IsAny<OperationModelDto>()))
                 .Returns(_invalidResult);
 
             _bankingLogicServiceMock.Setup(service =>
@@ -40,11 +42,11 @@ namespace BankingApp.API.Tests
                 .Returns(_invalidResult);
 
             _bankingLogicServiceMock.Setup(service => 
-                    service.Deposit(It.Is<Guid>(id => id.Equals(GetTestUserId())), It.Is<OperationModelDto>(model => model.Equals(_validModel))))
+                    service.Deposit(It.Is<Guid>(id => id.Equals(_testUserGuid)), It.Is<OperationModelDto>(model => model.Equals(_validModel))))
                 .Returns(_validResult);
 
             _bankingLogicServiceMock.Setup(service =>
-                    service.Withdraw(It.Is<Guid>(id => id == GetTestUserId()), It.IsAny<OperationModelDto>()))
+                    service.Withdraw(It.Is<Guid>(id => id == _testUserGuid), It.IsAny<OperationModelDto>()))
                 .Returns(_invalidResult);
 
             _bankingLogicServiceMock.Setup(service =>
@@ -52,11 +54,11 @@ namespace BankingApp.API.Tests
                 .Returns(_invalidResult);
 
             _bankingLogicServiceMock.Setup(service => 
-                    service.Withdraw(It.Is<Guid>(id => id == GetTestUserId()), It.Is<OperationModelDto>(model => model.Equals(_validModel))))
+                    service.Withdraw(It.Is<Guid>(id => id == _testUserGuid), It.Is<OperationModelDto>(model => model.Equals(_validModel))))
                 .Returns(_validResult);
 
             _bankingLogicServiceMock.Setup(service => 
-                    service.Transfer(It.Is<Guid>(id => id == GetTestUserId()), It.IsAny<OperationModelDto>()))
+                    service.Transfer(It.Is<Guid>(id => id == _testUserGuid), It.IsAny<OperationModelDto>()))
                 .Returns(_invalidResult);
 
             _bankingLogicServiceMock.Setup(service =>
@@ -64,7 +66,7 @@ namespace BankingApp.API.Tests
                 .Returns(_invalidResult);
 
             _bankingLogicServiceMock.Setup(service => service.Transfer(
-                    It.Is<Guid>(id => id == GetTestUserId()), It.Is<OperationModelDto>(model => model.Equals(_validModel))))
+                    It.Is<Guid>(id => id == _testUserGuid), It.Is<OperationModelDto>(model => model.Equals(_validModel))))
                 .Returns(_validResult);
         }
 
@@ -149,10 +151,6 @@ namespace BankingApp.API.Tests
         #endregion
 
         #region TestData
-        private Guid GetTestUserId()
-        {
-            return Guid.Parse("22b52dbd-75f6-4145-9050-6141618321ec");
-        }
 
         private BankingLogicController GetBankingLogicController()
         {
@@ -160,7 +158,7 @@ namespace BankingApp.API.Tests
 
             var userInClaimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, GetTestUserId().ToString())
+                new Claim(ClaimsIdentity.DefaultNameClaimType, _testUserGuid.ToString())
             }));
 
             controller.ControllerContext = new ControllerContext
