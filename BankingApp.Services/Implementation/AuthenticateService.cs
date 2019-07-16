@@ -20,7 +20,7 @@ namespace BankingApp.Services.Implementation
 
         private readonly IUnitOfWork _unitOfWork;
 
-        public AuthenticateService(DataContext context, IUnitOfWork unitOfWork)
+        public AuthenticateService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
