@@ -25,24 +25,24 @@ namespace BankingApp.UnitTests
         {
             Login = "existingLogin",
             Email = "abc@gmail.com",
-            Password = "ex",
-            ConfirmPassword = "ex"
+            Password = "pass",
+            ConfirmPassword = "pass"
         };
 
         private readonly RegisterDto _emailExistsRegisterDto = new RegisterDto
         {
             Login = "abc",
             Email = "existingEmail@gmail.com",
-            Password = "abc",
-            ConfirmPassword = "abc"
+            Password = "pass",
+            ConfirmPassword = "pass"
         };
 
         private readonly RegisterDto _notConfirmedPasswordRegisterDto = new RegisterDto
         {
             Login = "aaa",
             Email = "aaa@gmail.com",
-            Password = "aaa",
-            ConfirmPassword = "bbb"
+            Password = "pass",
+            ConfirmPassword = "pass"
         };
 
         private readonly LoginDto _incorrectLoginLoginDto = new LoginDto
