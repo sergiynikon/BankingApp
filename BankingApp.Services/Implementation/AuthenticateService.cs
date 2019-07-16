@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BankingApp.Data;
@@ -27,6 +28,13 @@ namespace BankingApp.Services.Implementation
 
         public ResultDto GetIdentityToken(LoginDto identity)
         {
+            var results = new List<ValidationResult>();
+            var context = new ValidationContext(identity);
+            if (!Validator.TryValidateObject(identity, context, results, validateAllProperties: true))
+            {
+                return ResultDto.Error("Model is invalid", identity);
+            }
+
             var user = _unitOfWork.UserRepository.GetByLogin(identity.Login);
 
             if (user == null)
@@ -67,6 +75,13 @@ namespace BankingApp.Services.Implementation
 
         public ResultDto RegisterUser(RegisterDto identity)
         {
+            var results = new List<ValidationResult>();
+            var context = new ValidationContext(identity);
+            if (!Validator.TryValidateObject(identity, context, results, validateAllProperties: true))
+            {
+                return ResultDto.Error("Model is invalid", identity);
+            }
+
             if (_unitOfWork.UserRepository.UserLoginExists(identity.Login))
             {
                 return ResultDto.Error($"login {identity.Login} already exists!");
