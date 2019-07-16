@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace BankingApp.API.Tests
+namespace BankingApp.UnitTests
 {
     public class AuthenticateControllerTests
     {
@@ -94,19 +94,6 @@ namespace BankingApp.API.Tests
         }
 
         [Fact]
-        public void Login_WhenModelStateIsNotValid_ReturnsBadRequest()
-        {
-            //Arrange
-            var controller = GetAuthenticateController();
-
-            //Act
-            var result = controller.Login(_invalidLoginModel);
-
-            //Assert
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
-
-        [Fact]
         public void Login_WhenCorrectLoginDto_ReturnsTokenInResultDto()
         {
             //Arrange
@@ -146,19 +133,6 @@ namespace BankingApp.API.Tests
 
             //Act
             var result = controller.Register(_incorrectRegisterDto);
-
-            //Assert
-            Assert.IsType<BadRequestObjectResult>(result);
-        }
-
-        [Fact]
-        public void Register_WhenModelStateIsNotValid_ReturnsBadRequest()
-        {
-            //Arrange
-            var controller = GetAuthenticateController();
-
-            //Act
-            var result = controller.Register(_invalidRegisterDto);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(result);
