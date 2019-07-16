@@ -1,4 +1,5 @@
-﻿using BankingApp.Data.Entities;
+﻿using System;
+using BankingApp.Data.Entities;
 using BankingApp.Data.UnitOfWork;
 using BankingApp.DataTransfer;
 using BankingApp.Services.Implementation;
@@ -44,7 +45,21 @@ namespace BankingApp.Services.Tests
             ConfirmPassword = "bbb"
         };
 
+        private readonly LoginDto _incorrectLoginLoginDto = new LoginDto
+        {
+            Login = "incorrectLogin",
+            Password = "pass"
+        };
+
+        private readonly LoginDto _incorrectPasswordLoginDto = new LoginDto
+        {
+            Login = "testLogin1",
+            Password = "incorrectPassword"
+        };
+
         private readonly User _userToAdd = new User("login", "email@gmail.com", "password");
+
+        private readonly User _correctUserFromDb = new User("correctLogin", "correctLogin@gmail.com", "correctPassword");
 
         public AuthenticateServiceTests()
         {
@@ -58,6 +73,15 @@ namespace BankingApp.Services.Tests
                 .Returns(true);
 
             _userServiceMock.Setup(u => u.UserRepository.Add(It.IsAny<User>()));
+
+            _userServiceMock.Setup(u => u.UserRepository.GetByLogin(_incorrectLoginLoginDto.Login))
+                .Returns((User) null);
+
+            _userServiceMock.Setup(u => u.UserRepository.GetByLogin(_incorrectPasswordLoginDto.Login))
+                .Returns(_correctUserFromDb);
+
+            _userServiceMock.Setup(u => u.UserRepository.VerifyPassword(It.IsAny<Guid>(), _incorrectPasswordLoginDto.Password))
+                .Returns(false);
         }
 
         #region RegisterTests
@@ -115,9 +139,33 @@ namespace BankingApp.Services.Tests
         }
         #endregion
 
-        #region LoginTests
+        #region GetIdentityTokenTests
 
+        [Fact]
+        public void GetIdentityToken_WhenIncorrectLogin_ReturnsSuccessResultDto()
+        {
+            //Arrange
+            var service = GetAuthenticateService();
 
+            //Act
+            var result = service.GetIdentityToken(_incorrectLoginLoginDto);
+
+            //Assert
+            Assert.False(result.IsSuccess);
+        }
+
+        [Fact]
+        public void GetIdentityToken_WhenIncorrectPassword_ReturnsSuccessResultDto()
+        {
+            //Arrange
+            var service = GetAuthenticateService();
+
+            //Act
+            var result = service.GetIdentityToken(_incorrectPasswordLoginDto);
+
+            //Assert
+            Assert.False(result.IsSuccess);
+        }
 
         #endregion
 
