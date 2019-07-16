@@ -19,8 +19,6 @@ namespace BankingApp.Services.Tests
         private readonly Guid _testSenderUserId = Guid.NewGuid();
         private readonly Guid _testReceiverUserId = Guid.NewGuid();
 
-
-
         public BankingLogicServiceTests()
         {
             _unitOfWorkMock.Setup(u => u.UserRepository.GetById(It.IsAny<Guid>()))
