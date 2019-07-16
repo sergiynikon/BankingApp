@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace BankingApp.API.Tests
+namespace BankingApp.UnitTests
 {
     public class TransactionsControllerTests
     {

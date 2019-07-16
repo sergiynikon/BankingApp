@@ -8,7 +8,7 @@ using BankingApp.Services.Interfaces;
 using Moq;
 using Xunit;
 
-namespace BankingApp.Services.Tests
+namespace BankingApp.UnitTests
 {
     public class BankingLogicServiceTests
     {
