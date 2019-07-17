@@ -1,4 +1,5 @@
-﻿using BankingApp.Data;
+﻿using BankingApp.API.Extensions;
+using BankingApp.Data;
 using BankingApp.Data.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using BankingApp.Services.Implementation;
 using BankingApp.Services.Helpers;
 using BankingApp.Services.Interfaces;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace BankingApp.API
 {
@@ -56,6 +58,8 @@ namespace BankingApp.API
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITransactionsService, TransactionsService>();
             services.AddScoped<IBankingLogicService, BankingLogicService>();
+
+            services.AddSwaggerDocumentation();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -71,6 +75,8 @@ namespace BankingApp.API
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
+
+            app.UseSwaggerDocumentation();
 
             app.UseMvc(routes => {
                 routes.MapRoute(
