@@ -11,7 +11,7 @@ namespace BankingApp.API.Extensions
 {
     public static class SwaggerServiceExtensions
     {
-        private const string Version = "v1.0";
+        private static readonly string Version = "v1.0";
         public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
