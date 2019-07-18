@@ -18,7 +18,6 @@ namespace BankingApp.API.Extensions
             {
                 c.SwaggerDoc(Version, new Info { Title = $"BankingApp.API {Version}", Version = Version });
 
-                // Swagger 2.+ support
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     {"Bearer", new string[] { }},
