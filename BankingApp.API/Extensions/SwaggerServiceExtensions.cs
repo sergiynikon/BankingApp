@@ -11,14 +11,13 @@ namespace BankingApp.API.Extensions
 {
     public static class SwaggerServiceExtensions
     {
-        private const string Version = "v1.0";
+        private static readonly string Version = "v1.0";
         public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(Version, new Info { Title = $"BankingApp.API {Version}", Version = Version });
 
-                // Swagger 2.+ support
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
                     {"Bearer", new string[] { }},
