@@ -14,10 +14,11 @@ namespace BankingApp.Services.Implementation
 {
     public class AuthenticateService : IAuthenticateService
     {
+        private static readonly string DefaultClaimsType = "Id";
+
         private static readonly string ErrorMessageIncorrectLogin = "Incorrect login!";
         private static readonly string ErrorMessageIncorrectPassword = "Incorrect password!";
         private static readonly string ErrorMessageCanNotGetIdentity = "Can not get identity";
-
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -104,7 +105,7 @@ namespace BankingApp.Services.Implementation
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userId.ToString())
+                new Claim(DefaultClaimsType, userId.ToString())
             };
 
             ClaimsIdentity claimsIdentity =
