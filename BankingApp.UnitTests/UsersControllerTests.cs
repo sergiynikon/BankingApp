@@ -92,19 +92,19 @@ namespace BankingApp.UnitTests
             {
                 new UserViewModelDto
                 {
-                    Balance = 100000,
+                    Balance = "100000",
                     Email = "testUser1@email.com",
                     Login = "testUser1"
                 },
                 new UserViewModelDto
                 {
-                    Balance = 200000,
+                    Balance = "200000",
                     Email = "testUser2@email.com",
                     Login = "testUser2"
                 },
                 new UserViewModelDto
                 {
-                    Balance = 300000,
+                    Balance = "300000",
                     Email = "testUser3@email.com",
                     Login = "testUser3"
                 }
